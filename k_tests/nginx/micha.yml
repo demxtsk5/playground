@@ -9,4 +9,4 @@ spec:
     - name: webserver1
       image: nginx:latest
     - name: alpine1
-      image: alpine:latest
+      image: alpine
