@@ -3,6 +3,7 @@ kind: Service
 metadata:
   name: webservice
 spec:
+  type: LoadBalancer
   selector:
     key1: "label1" # ist das Label aus der Deployment YML
   ports:
