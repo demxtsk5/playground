@@ -8,3 +8,5 @@ spec:
   containers:
     - name: webserver1
       image: nginx:latest
+      ports:
+        - containerPort: 80
