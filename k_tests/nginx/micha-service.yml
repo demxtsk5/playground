@@ -8,5 +8,5 @@ spec:
     key1: "label1" # ist das Label aus der Deployment YML
   ports:
     - protocol: TCP
-      port: 30001
+      port: 30003
       targetPort: 80
