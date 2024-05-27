@@ -4,7 +4,7 @@ metadata:
   name: webservice
 spec:
   selector:
-    key1: "label1"
+    key1: "label1" # ist das Label aus der Deployment YML
   ports:
     - protocol: TCP
       port: 80

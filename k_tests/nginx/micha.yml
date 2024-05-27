@@ -3,7 +3,7 @@ kind: Pod
 metadata:
   name: webserver
   labels:
-    key1: "label1"
+    key1: "label1" # zum mappen des Services
 spec:
   containers:
     - name: webserver1
