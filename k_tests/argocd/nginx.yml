@@ -1,0 +1,15 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: 'nginx'
+spec:
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: default
+  source:
+    repoURL: 'git@github.com:demxtsk5/playground.git'
+    path: k_tests/nginx
+    targetRevision: HEAD
+  project: default
+  syncPolicy:
+    automated: {}
