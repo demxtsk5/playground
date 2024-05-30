@@ -1,20 +1,14 @@
---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: metallb
+  name: 'metallb'
 spec:
-  destination:
-    name: ''
-    namespace: ''
-    server: 'https://kubernetes.default.svc'
-  source:
-    path: k_test/metallb
-    repoURL: 'git@github.com:demxtsk5/playground.git'
-    targetRevision: HEAD
-  sources: []
   project: default
+  source:
+    repoURL: 'git@github.com:demxtsk5/playground.git'
+    path: k_tests/metallb
+    targetRevision: HEAD
+  destination:
+    server: 'https://kubernetes.default.svc'
   syncPolicy:
-    automated:
-      prune: false
-      selfHeal: false
+    automated: {}
