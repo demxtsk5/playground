@@ -5,3 +5,4 @@ apt_pkgs:
   - bash-completion
   - iputils-ping
   - git
+  - curl

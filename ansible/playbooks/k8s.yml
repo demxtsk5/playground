@@ -1,0 +1,19 @@
+---
+- name: Setup K3s
+  become: true
+  hosts:
+    - all
+
+  tasks:
+    - name: Find out what the remote machine's mounts are
+      ansible.builtin.slurp:
+        src: /var/lib/rancher/k3s/server/node-token
+      register: k3s_token
+    - name: Show token
+      debug:
+        msg: "{{ k3s_token['content'] | b64decode }}"
+    - name: Get file with K3s token
+      ansible.builtin.fetch:
+        src: /var/lib/rancher/k3s/server/node-token
+        dest: files/
+        flat: true
