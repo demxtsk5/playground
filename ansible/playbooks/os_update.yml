@@ -1,0 +1,16 @@
+---
+- name: Update OS
+  become: true
+  hosts:
+    - all
+  tasks:
+    - name: Run APT upgrade
+      apt:
+        update_cache: true
+        autoclean: true
+        autoremove: true
+        upgrade: full
+      register: upgrade_output    
+    - name: Display output of apt ugrade
+      debug:
+        var: upgrade_output

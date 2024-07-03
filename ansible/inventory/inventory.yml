@@ -1,6 +1,10 @@
 ---
 all:
   children:
+    infra:
+      hosts:
+        u01:
+          ansible_host: 192.168.65.17
     kube:
       hosts:
         kube01:

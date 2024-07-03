@@ -4,3 +4,4 @@ apt_pkgs:
   - vim
   - bash-completion
   - iputils-ping
+  - git

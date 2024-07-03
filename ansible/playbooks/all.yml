@@ -9,6 +9,8 @@
     - name: Update APT Cache
       apt:
         update_cache: true
+        autoclean: true
+        autoremove: true
     - name: Install additional packages
       apt:
         name: "{{ apt_pkgs }}"
@@ -20,3 +22,14 @@
         owner: root
         group: root
         mode: 0644
+    - name: Place sshd_config
+      ansible.builtin.template:
+        src: sshd_config.j2
+        dest: /etc/ssh/sshd_config
+        owner: root
+        group: root
+        mode: 0644
+    - name: Restart ssh
+      ansible.builtin.service:
+        name: ssh
+        state: restarted
