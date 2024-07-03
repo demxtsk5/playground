@@ -1,0 +1,6 @@
+---
+apt_pkgs:
+  - less
+  - vim
+  - bash-completion
+  - iputils-ping

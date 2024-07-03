@@ -1,0 +1,22 @@
+---
+- name: All
+  become: true
+  hosts:
+    - all
+  tasks:
+    - name: Ping
+      ansible.builtin.ping:
+    - name: Update APT Cache
+      apt:
+        update_cache: true
+    - name: Install additional packages
+      apt:
+        name: "{{ apt_pkgs }}"
+        state: present
+    - name: Place resolv.conf
+      ansible.builtin.template:
+        src: resolv.conf.j2
+        dest: /etc/resolv.conf
+        owner: root
+        group: root
+        mode: 0644
