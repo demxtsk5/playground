@@ -6,3 +6,4 @@ apt_pkgs:
   - iputils-ping
   - git
   - curl
+  - net-tools
