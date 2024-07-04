@@ -5,7 +5,10 @@
     - all
 
   tasks:
-    - name: Find out what the remote machine's mounts are
+    - name: Install K3s on master node
+      ansible.builtin.shell: |
+        curl -sfL https://get.k3s.io | sh -s - server --cluster-init --node-ip "{{ ansible_default_ipv4.address }}" --flannel-iface "{{ ansible_default_ipv4.interface }}"
+    - name: Read token on master node
       ansible.builtin.slurp:
         src: /var/lib/rancher/k3s/server/node-token
       register: k3s_token
