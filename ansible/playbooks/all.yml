@@ -33,3 +33,14 @@
       ansible.builtin.service:
         name: ssh
         state: restarted
+    - name: Switch Swap off
+      ansible.builtin.shell: |
+        swapoff -a
+      register: swap_off
+      changed_when: false
+    - name: Remove Swap from fstab
+      ansible.builtin.mount:
+        name: none
+        src: none
+        fstype: swap
+        state: absent

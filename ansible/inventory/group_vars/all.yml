@@ -7,3 +7,4 @@ apt_pkgs:
   - git
   - curl
   - net-tools
+ansible_user: mg0050

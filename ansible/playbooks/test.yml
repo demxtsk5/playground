@@ -1,0 +1,10 @@
+---
+- name: Test
+  hosts:
+    - all
+  become: true
+  gather_facts: true
+  tasks:
+    - name: Write a variable
+      debug:
+        var: ansible_user

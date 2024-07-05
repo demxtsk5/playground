@@ -1,0 +1,14 @@
+---
+- name: Shutdown
+  hosts: all
+  become: yes 
+  tasks:
+    - name: Ensure your user is allowed to do this shit
+      ansible.builtin.template:
+        src: sudo.j2
+        dest: /etc/sudoers.d/{{ ansible_user}}
+        owner: root
+        group: root    
+    - name: Shut down the servers
+      command: /sbin/shutdown -h now
+      ignore_errors: yes
