@@ -1,0 +1,18 @@
+---
+- name: Setup DNS
+  become: true
+  hosts:
+    - all
+  gather_facts: true
+  vars:
+    - zone: "mi.go"
+    - packages:
+        - bind9
+        - dnsutils
+
+  tasks:
+    - name: Install neccessary packages
+      apt:
+        update_cache: true
+        name: "{{ packages }}"
+        state: present
