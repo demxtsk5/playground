@@ -23,6 +23,15 @@
         owner: root
         group: root
         mode: 0644
+    - name: Add zone to named.conf
+      blockinfile:
+        path: /etc/bind/named.conf.local
+        block: |
+          zone "{{ zone }}" {
+          type master;
+          file "/etc/bind/db.{{ zone }}";
+          };
+        marker: "# {mark} ANSIBLE MANAGED BLOCK"
     - name: Restart bind9 service
       ansible.builtin.service:
         name: bind9
