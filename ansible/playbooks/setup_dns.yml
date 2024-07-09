@@ -16,3 +16,14 @@
         update_cache: true
         name: "{{ packages }}"
         state: present
+    - name: Place zone file in /etc/bind
+      ansible.builtin.template:
+        src: zone.j2
+        dest: /etc/bind/db.{{ zone }}
+        owner: root
+        group: root
+        mode: 0644
+    - name: Restart bind9 service
+      ansible.builtin.service:
+        name: bind9
+        state: restarted
