@@ -7,3 +7,4 @@ apt_pkgs:
   - git
   - curl
   - net-tools
+  - apt-utils
