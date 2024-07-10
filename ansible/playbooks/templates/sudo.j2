@@ -1,1 +1,1 @@
-"{{ ansible_user}}" ALL=(ALL) NOPASSWD: /sbin/shutdown
+{{ ansible_env.USER }} ALL=(ALL) NOPASSWD: /sbin/shutdown
