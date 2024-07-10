@@ -39,7 +39,7 @@
       register: swap_off
       changed_when: false
     - name: Remove Swap from fstab
-      ansible.builtin.mount:
+      ansible.posix.mount:
         name: none
         src: none
         fstype: swap
