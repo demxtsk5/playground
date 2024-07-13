@@ -1,2 +1,3 @@
 playbooks/files/
 inventory/
+kstart.sh
