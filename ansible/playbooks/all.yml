@@ -11,6 +11,10 @@
         update_cache: true
         autoclean: true
         autoremove: true
+    - name: Add Ansible PPA repository
+      ansible.builtin.apt_repository:
+        repo: ppa:ansible/ansible
+        state: present
     - name: Install additional packages
       apt:
         name: "{{ apt_pkgs }}"
