@@ -1,0 +1,9 @@
+[proxy]
+managed1 ansible_host=192.168.65.31
+[webservers]
+managed2 ansible_host=192.168.65.32
+[database]
+managed3 ansible_host=192.168.65.33
+[public:children]
+webservers
+proxy

@@ -1,0 +1,79 @@
+2024-08-26 12:09:51,915 p=6358 u=mg0050 n=ansible | managed1 | UNREACHABLE! => {
+    "changed": false,
+    "msg": "Failed to connect to the host via ssh: mg0050@192.168.65.31: Permission denied (publickey,password).",
+    "unreachable": true
+}
+2024-08-26 12:09:51,928 p=6358 u=mg0050 n=ansible | managed2 | UNREACHABLE! => {
+    "changed": false,
+    "msg": "Failed to connect to the host via ssh: Warning: Permanently added '192.168.65.32' (ED25519) to the list of known hosts.\r\nmg0050@192.168.65.32: Permission denied (publickey,password).",
+    "unreachable": true
+}
+2024-08-26 12:09:51,937 p=6358 u=mg0050 n=ansible | managed3 | UNREACHABLE! => {
+    "changed": false,
+    "msg": "Failed to connect to the host via ssh: Warning: Permanently added '192.168.65.33' (ED25519) to the list of known hosts.\r\nmg0050@192.168.65.33: Permission denied (publickey,password).",
+    "unreachable": true
+}
+2024-08-26 12:10:09,196 p=6368 u=mg0050 n=ansible | managed1 | UNREACHABLE! => {
+    "changed": false,
+    "msg": "Failed to connect to the host via ssh: mg0050@192.168.65.31: Permission denied (publickey,password).",
+    "unreachable": true
+}
+2024-08-26 12:10:09,197 p=6368 u=mg0050 n=ansible | managed2 | UNREACHABLE! => {
+    "changed": false,
+    "msg": "Failed to connect to the host via ssh: mg0050@192.168.65.32: Permission denied (publickey,password).",
+    "unreachable": true
+}
+2024-08-26 12:10:09,197 p=6368 u=mg0050 n=ansible | managed3 | UNREACHABLE! => {
+    "changed": false,
+    "msg": "Failed to connect to the host via ssh: mg0050@192.168.65.33: Permission denied (publickey,password).",
+    "unreachable": true
+}
+2024-08-26 12:10:40,869 p=6376 u=mg0050 n=ansible | managed3 | FAILED! => {
+    "msg": "to use the 'ssh' connection type with passwords or pkcs11_provider, you must install the sshpass program"
+}
+2024-08-26 12:10:40,869 p=6376 u=mg0050 n=ansible | managed1 | FAILED! => {
+    "msg": "to use the 'ssh' connection type with passwords or pkcs11_provider, you must install the sshpass program"
+}
+2024-08-26 12:10:40,869 p=6376 u=mg0050 n=ansible | managed2 | FAILED! => {
+    "msg": "to use the 'ssh' connection type with passwords or pkcs11_provider, you must install the sshpass program"
+}
+2024-08-26 12:31:27,056 p=8260 u=mg0050 n=ansible | [WARNING]: Platform linux on host managed1 is using the discovered Python interpreter at /usr/bin/python3.10, but future installation
+of another Python interpreter could change the meaning of that path. See https://docs.ansible.com/ansible-
+core/2.17/reference_appendices/interpreter_discovery.html for more information.
+
+2024-08-26 12:31:27,057 p=8260 u=mg0050 n=ansible | managed1 | SUCCESS => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python3.10"
+    },
+    "changed": false,
+    "ping": "pong"
+}
+2024-08-26 12:31:27,057 p=8260 u=mg0050 n=ansible | [WARNING]: Platform linux on host managed2 is using the discovered Python interpreter at /usr/bin/python3.10, but future installation
+of another Python interpreter could change the meaning of that path. See https://docs.ansible.com/ansible-
+core/2.17/reference_appendices/interpreter_discovery.html for more information.
+
+2024-08-26 12:31:27,057 p=8260 u=mg0050 n=ansible | managed2 | SUCCESS => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python3.10"
+    },
+    "changed": false,
+    "ping": "pong"
+}
+2024-08-26 12:31:27,057 p=8260 u=mg0050 n=ansible | [WARNING]: Platform linux on host managed3 is using the discovered Python interpreter at /usr/bin/python3.10, but future installation
+of another Python interpreter could change the meaning of that path. See https://docs.ansible.com/ansible-
+core/2.17/reference_appendices/interpreter_discovery.html for more information.
+
+2024-08-26 12:31:27,057 p=8260 u=mg0050 n=ansible | managed3 | SUCCESS => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python3.10"
+    },
+    "changed": false,
+    "ping": "pong"
+}
+2024-08-26 12:33:40,239 p=8339 u=mg0050 n=ansible | ERROR! Invalid collection name (must be of the form namespace.collection): user
+2024-08-26 12:34:03,322 p=8351 u=mg0050 n=ansible |  [ERROR]: User interrupted execution
+
+2024-08-26 12:34:06,048 p=8353 u=mg0050 n=ansible | ERROR! Missing name(s), incorrect options passed for detailed documentation.
+2024-08-26 12:35:30,106 p=8370 u=mg0050 n=ansible | [WARNING]: ansible.builtin_user was not found
+
+2024-08-26 12:35:48,007 p=8375 u=mg0050 n=ansible | ERROR! Missing name(s), incorrect options passed for detailed documentation.
