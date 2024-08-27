@@ -1,0 +1,35 @@
+---
+- name: Start KUBE Cluster incl. infra node
+  become: false
+  gather_facts: false
+  hosts:
+    - localhost
+  tasks:
+    - name: Start UTM
+      ansible.builtin.shell: |
+        open ~/Applications/UTM.app
+      register: start_utm
+      changed_when: start_utm.rc == 0
+    - name: Wait for 10 seconds the UTM can start
+      ansible.builtin.wait_for:
+        timeout: 5
+    - name: Start infra with utmctl
+      ansible.builtin.shell: |
+        utmctl start U01
+      register: start_output0
+      changed_when: start_output0.rc == 0
+    - name: Start kube01 with utmctl
+      ansible.builtin.shell: |
+        utmctl start Kube01
+      register: start_output1
+      changed_when: start_output1.rc == 0
+    - name: Start kube02 with utmctl
+      ansible.builtin.shell: |
+        utmctl start Kube02
+      register: start_output2
+      changed_when: start_output2.rc == 0
+    - name: Start kube03 with utmctl
+      ansible.builtin.shell: |
+        utmctl start Kube03
+      register: start_output3
+      changed_when: start_output3.rc == 0

@@ -1,0 +1,31 @@
+- name: Create local bkp folder
+  gather_facts: false
+  hosts:
+    - localhost
+  tasks:
+    - ansible.builtin.file:
+        path: /Users/mg0050/git/playground/ex294/backup
+        state: directory
+        mode: 0755    
+
+- name: Create archive of /etc
+  hosts:
+    - all
+  tasks:
+    - name: Create folder
+      ansible.builtin.file:
+        path: /backup
+        state: directory
+        mode: 0755
+        owner: automation
+        group: automation
+    - name: Create archive
+      ansible.builtin.archive:
+        path: /etc
+        dest: /Users/mg0050/git/playground/ex294/backup/configuration.gz
+        format: gzip
+    - name: Fetch files
+      ansible.builtin.fetch:
+        src: /backup/configuration.gz
+        dest: /backup/{{ inventory_hostname }}-configuration.gz
+        flat: yes
