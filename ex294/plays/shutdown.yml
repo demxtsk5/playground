@@ -1,0 +1,12 @@
+---
+- name: Shutdown
+  hosts:
+    - all
+  become: true
+  tasks:
+    - name: Shut down the servers
+      ansible.builtin.shell: |
+        /sbin/shutdown -h now
+      register: shut_out
+      ignore_errors: true
+      changed_when: shut_out.rc == 0

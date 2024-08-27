@@ -11,6 +11,7 @@
 - name: Create archive of /etc
   hosts:
     - all
+  become: true
   tasks:
     - name: Create folder
       ansible.builtin.file:
@@ -19,13 +20,17 @@
         mode: 0755
         owner: automation
         group: automation
+        recurse: true
     - name: Create archive
       ansible.builtin.archive:
         path: /etc
-        dest: /Users/mg0050/git/playground/ex294/backup/configuration.gz
-        format: gzip
+        dest: /backup/configuration.gz
+        format: gz
+        owner: automation
+        group: automation
+        mode: 0660
     - name: Fetch files
       ansible.builtin.fetch:
         src: /backup/configuration.gz
-        dest: /backup/{{ inventory_hostname }}-configuration.gz
+        dest: /Users/mg0050/git/playground/ex294/backup/{{ inventory_hostname }}-configuration.gz
         flat: yes

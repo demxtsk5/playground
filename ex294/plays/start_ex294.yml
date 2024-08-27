@@ -18,18 +18,18 @@
         utmctl start U01
       register: start_output0
       changed_when: start_output0.rc == 0
-    - name: Start kube01 with utmctl
+    - name: Start EX294_01
       ansible.builtin.shell: |
-        utmctl start Kube01
+        utmctl start EX294_01
       register: start_output1
       changed_when: start_output1.rc == 0
-    - name: Start kube02 with utmctl
+    - name: Start EX294_02
       ansible.builtin.shell: |
-        utmctl start Kube02
+        utmctl start EX294_02
       register: start_output2
       changed_when: start_output2.rc == 0
-    - name: Start kube03 with utmctl
+    - name: Start EX294_03
       ansible.builtin.shell: |
-        utmctl start Kube03
+        utmctl start EX294_03
       register: start_output3
       changed_when: start_output3.rc == 0
