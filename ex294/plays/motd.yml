@@ -1,0 +1,12 @@
+---
+- name: File Content
+  hosts:
+    - all
+  become: true
+  gather_facts: false
+  tasks:
+    - name: 
+      ansible.builtin.copy:
+        src: motd.proxy
+        dest:
+      when: {{ inventory_group }} == proxy
