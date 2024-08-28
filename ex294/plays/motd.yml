@@ -5,8 +5,24 @@
   become: true
   gather_facts: false
   tasks:
-    - name: 
+    - name: Copy Motd 
       ansible.builtin.copy:
         src: motd.proxy
-        dest:
-      when: {{ inventory_group }} == proxy
+        dest: /etc/motd
+        owner: root
+        group: root
+      when: inventory_hostname in groups['proxy']    
+    - name: Copy Motd 
+      ansible.builtin.copy:
+        src: motd.webservers
+        dest: /etc/motd
+        owner: root
+        group: root
+      when: inventory_hostname in groups['webservers']    
+    - name: Copy Motd 
+      ansible.builtin.copy:
+        src: motd.database
+        dest: /etc/motd
+        owner: root
+        group: root
+      when: inventory_hostname in groups['database']    

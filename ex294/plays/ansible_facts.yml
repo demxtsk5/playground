@@ -1,0 +1,19 @@
+---
+- name: q5
+  hosts:
+    - proxy
+  become: true
+  gather_facts: true
+  tasks:
+    - name: Create /etc/ansible/facts.d
+      ansible.builtin.file:
+        path: /etc/ansible/facts.d
+        state: directory
+        recurse: yes
+    - name: fill folder with content
+      ansible.builtin.copy:
+        content: "[application]\nname=haproxy\n"
+        dest: /etc/ansible/facts.d/environment.fact
+    - name: 1
+      debug:
+        var: ansible_local.environment.application     
