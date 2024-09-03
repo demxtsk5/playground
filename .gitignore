@@ -1,4 +1,4 @@
 ./graylog/graylog_folders
 ./pihole/etc-pihole/
 ./pihole/etc-dnsmasq.d/
-ex294/logs/execution.log
+./ex294/logs/execution.log
