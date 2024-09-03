@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hpa
+  namespace: tt3
+spec:
+  selector:
+    matchLabels:
+      run: hpa
+  template:
+    metadata:
+      labels:
+        run: hpa
+    spec:
+      containers:
+      - name: nginx-hpa
+        image: nginx
+        ports:
+        - containerPort: 80
+        resources:
+          limits:
+            cpu: 500m
+          requests:
+            cpu: 200m
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hpa
+  namespace: tt3
+  labels:
+    run: hpa
+spec:
+  ports:
+  - port: 80
+  selector:
+    run: hpa
+
