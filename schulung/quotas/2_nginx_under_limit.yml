@@ -1,0 +1,34 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test1
+  namespace: tt3
+  labels:
+    function: 'test1' # zum mappen des Services
+spec:
+  containers:
+    - name: webserver1
+      image: nginx:latest
+      ports:
+        - containerPort: 80
+      resources:
+        limits:
+          cpu: "100m"
+          memory: "100M"
+        requests:
+          cpu: "100m"    
+          memory: "100M"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: test1
+  namespace: tt3
+spec:
+  type: LoadBalancer
+  selector:
+    function: 'test1' # ist das Label aus der Deployment YML
+  ports:
+    - protocol: TCP
+      port: 30004
+      targetPort: 80

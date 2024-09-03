@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: compute-resources
+  namespace: tt3
+spec:
+  hard:
+#    requests.cpu: "1"
+#    requests.memory: 1Gi
+    limits.cpu: "1"
+    limits.memory: 200M
+#    requests.nvidia.com/gpu: 4
