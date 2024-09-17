@@ -14,3 +14,12 @@
     - name: Display output of apt ugrade
       debug:
         var: upgrade_output
+    - name: APT clean everything
+      apt:
+        update_cache: true
+        autoclean: true
+        autoremove: true
+    - name: Remove files in cache
+      file:
+        path: /tmp/*
+        state: absent
