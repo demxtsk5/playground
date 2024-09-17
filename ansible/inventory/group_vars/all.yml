@@ -8,5 +8,6 @@ apt_pkgs:
   - curl
   - net-tools
   - apt-utils
+  - tmpreaper
 
 lb_ip_range: 192.168.65.250-192.168.65.254

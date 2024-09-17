@@ -33,6 +33,13 @@
         owner: root
         group: root
         mode: 0644
+    - name: Place tmp reaper config
+      ansible.builtin.copy:  
+        src: tmpreaper.conf
+        dest: /etc/tmpreaper.conf
+        owner: root
+        group: root
+        mode: 0644
     - name: Restart ssh
       ansible.builtin.service:
         name: ssh
