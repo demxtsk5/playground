@@ -2,12 +2,13 @@ apiVersion: v1
 kind: PersistentVolume
 metadata:
   name: nfs-pv
+  namespace: tt3
 spec:
   storageClassName: manual
   capacity:
-    storage: 1Gi
+    storage: 10M
   accessModes:
     - ReadWriteOnce
   nfs:
     path: /nfs
-    server: 192.168.56.30
+    server: 192.168.65.17
