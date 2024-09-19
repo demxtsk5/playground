@@ -1,0 +1,17 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+  namespace: tt3
+data:
+  default.conf: |
+    server {
+      listen 443 ssl;
+      ssl_certificate /etc/nginx/ssl/tls.crt;
+      ssl_certificate_key /etc/nginx/ssl/tls.key;
+      location / {
+        root /usr/share/nginx/html;
+        index index.html;
+        }
+      }

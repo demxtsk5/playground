@@ -1,0 +1,45 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  namespace: tt3
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 443
+        volumeMounts:
+        - name: nfs-volume
+          mountPath: /usr/share/nginx/html
+        - name: tls-secret
+          mountPath: /etc/nginx/ssl
+          readOnly: true
+        - name: nginx-config
+          mountPath: /etc/nginx/conf.d 
+          readOnly: true
+        args:
+        - /bin/sh
+        - -c
+        - nginx -g 'daemon off;'
+      volumes:
+      - name: nfs-volume
+        persistentVolumeClaim:
+          claimName: nfs-pvc
+      - name: tls-secret
+        secret:
+          secretName: nginx-tls
+      - name: nginx-config
+        configMap: 
+          name: nginx-config
+        
