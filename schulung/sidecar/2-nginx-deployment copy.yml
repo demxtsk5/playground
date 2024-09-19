@@ -49,12 +49,6 @@ spec:
         - /bin/sh
         - -c
         - nginx -g 'daemon off;'
-      - name: nginx-exporter
-        image: nginx/nginx-prometheus-exporter:latest
-        ports:
-        - containerPort: 9113
-        args:
-        - "-nginx.scrape_uri=http://localhost:80/stub_status"      
       volumes:
       - name: tls-secret
         secret:
@@ -62,6 +56,12 @@ spec:
       - name: nginx-config
         configMap: 
           name: nginx-config     
+      - name: nginx-exporter
+        image: nginx/nginx-prometheus-exporter:latest
+        ports:
+        - containerPort: 9113
+        args:
+        - "-nginx.scrape_uri=http://localhost:80/stub_status"
 ---
 # Create Service
 apiVersion: v1
@@ -76,3 +76,4 @@ spec:
     - port: 443
       targetPort: 443
   type: LoadBalancer
+  

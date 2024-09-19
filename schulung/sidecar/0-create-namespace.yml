@@ -1,0 +1,8 @@
+---
+# Create Namespace
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: tt3
+  labels:
+    name: tt3
