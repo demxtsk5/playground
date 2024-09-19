@@ -4,7 +4,7 @@ metadata:
   name: nfs-pv
   namespace: tt3
 spec:
-  storageClassName: manual
+  storageClassName: local-path
   capacity:
     storage: 10M
   accessModes:

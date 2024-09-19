@@ -5,9 +5,9 @@ metadata:
   name: nfs-pvc
   namespace: tt3
 spec:
-  storageClassName: manual
+  storageClassName: local-path
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 1Gi
+      storage: 10M
