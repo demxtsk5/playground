@@ -1,0 +1,99 @@
+---
+# Create Namespace
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: tt3
+  labels:
+    name: tt3
+---
+# Create ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+  namespace: tt3
+data:
+  default.conf: |
+    server {
+      listen 443 ssl;
+      ssl_certificate /etc/nginx/ssl/tls.crt;
+      ssl_certificate_key /etc/nginx/ssl/tls.key;
+      location / {
+        root /usr/share/nginx/html;
+        index index.html;
+        }
+      }
+---
+# Create nginx Pods
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  namespace: tt3
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        ports:
+        - containerPort: 443
+        volumeMounts:
+        - name: tls-secret
+          mountPath: /etc/nginx/ssl
+          readOnly: true
+        - name: nginx-config
+          mountPath: /etc/nginx/conf.d 
+          readOnly: true
+        args:
+        - /bin/sh
+        - -c
+        - nginx -g 'daemon off;'
+      volumes:
+      - name: tls-secret
+        secret:
+          secretName: nginx-tls
+      - name: nginx-config
+        configMap: 
+          name: nginx-config     
+---
+# Create SideCar
+apiVersion: v1
+kind: Pod
+metadata:
+  name: webserver
+  namespace: tt3
+spec:
+  containers:
+  - name: webserver
+    image: nginx:latest
+    ports:
+    - containerPort: 443
+  - name: nginx-exporter
+    image: nginx/nginx-prometheus-exporter:latest
+    ports:
+    - containerPort: 9113
+    args:
+      - "-nginx.scrape_uri=http://localhost:80/stub_status"
+---
+# Create Service
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: tt3
+  name: nginx-svc
+spec:
+  selector:
+    app: nginx
+  ports:
+    - port: 443
+      targetPort: 443
+  type: LoadBalancer

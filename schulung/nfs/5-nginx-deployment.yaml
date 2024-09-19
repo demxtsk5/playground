@@ -42,4 +42,3 @@ spec:
       - name: nginx-config
         configMap: 
           name: nginx-config
-        
