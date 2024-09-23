@@ -1,5 +1,5 @@
-./graylog/graylog_folders
-./pihole/etc-pihole/
-./pihole/etc-dnsmasq.d/
-./ex294/logs/execution.log
-./ex294/plays/display_facts.yml
+graylog/graylog_folders
+pihole/etc-pihole/
+pihole/etc-dnsmasq.d/
+ex294/logs/execution.log
+ex294/plays/display_facts.yml
