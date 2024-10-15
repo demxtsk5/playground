@@ -3,5 +3,5 @@ pihole/etc-pihole/
 pihole/etc-dnsmasq.d/
 ex294/logs/execution.log
 ex294/plays/display_facts.yml
-ansible/demo
+ansible/kubespray
 ansible/files
