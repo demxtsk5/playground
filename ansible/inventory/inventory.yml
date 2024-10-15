@@ -8,9 +8,9 @@ all:
     kube:
       hosts:
         kube01:
-          ansible_host: 192.168.65.28
-        kube02:
           ansible_host: 192.168.65.27
+        kube02:
+          ansible_host: 192.168.65.28
         kube03:
           ansible_host: 192.168.65.29
     test:
