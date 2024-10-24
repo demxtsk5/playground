@@ -5,7 +5,7 @@
     - all
   gather_facts: true
   vars:
-    - zone: "mi.go"
+    - zone: "mg.org"
     - packages:
         - bind9
         - dnsutils
