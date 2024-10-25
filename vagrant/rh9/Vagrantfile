@@ -7,6 +7,7 @@ Vagrant.configure("2") do |config|
 
   # VM rh1
   config.vm.define "rh1" do |rh1|
+    rh1.vm.provider "vmware"
     rh1.vm.box = "generic/rhel9"
     rh1.vm.network "public_network", ip: "192.168.64.101"
     rh1.vm.hostname = "rh1"
@@ -30,6 +31,7 @@ Vagrant.configure("2") do |config|
 
   # VM rh2
   config.vm.define "rh2" do |rh2|
+    rh2.vm.provider "vmware"
     rh2.vm.box = "generic/rhel9"
     rh2.vm.network "public_network", ip: "192.168.64.102"
     rh2.vm.hostname = "rh2"
