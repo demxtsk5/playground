@@ -9,6 +9,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "rh1" do |rh1|
     rh1.vm.box = "generic/rhel9"
     rh1.vm.network "public_network", ip: "192.168.64.101"
+    rh1.vm.hostname = "rh1"
 
     # Set up provisioning to configure root password, create new user, and set SSH key
     rh1.vm.provision "shell", inline: <<-SHELL
@@ -31,6 +32,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "rh2" do |rh2|
     rh2.vm.box = "generic/rhel9"
     rh2.vm.network "public_network", ip: "192.168.64.102"
+    rh2.vm.hostname = "rh2"
 
     # Set up provisioning to configure root password, create new user, and set SSH key
     rh2.vm.provision "shell", inline: <<-SHELL
