@@ -5,6 +5,4 @@ ex294/logs/execution.log
 ex294/plays/display_facts.yml
 ansible/kubespray
 ansible/files
-vagrant/rh9/.vagrant
-vagrant/rocky9/.vagrant
-vagrant/k8s/.vagrant
+vagrant/*/.vagrant
