@@ -23,7 +23,7 @@
         dest: /etc/bind/reverse.mg.org
         mode: 0644
         owner: root
-        group: root    
+        group: root
     - name: Place named.conf in /etc/bind
       template:
         src: named.conf.j2
@@ -31,9 +31,14 @@
         mode: 0644
         owner: root
         group: root
+    - name: Place resolv.conf in /etc/
+      template:
+        src: resolv.conf.j2
+        dest: /etc/resolv.conf
+        mode: 0644
+        owner: root
+        group: root
     - name: Restart bind9 service
       ansible.builtin.service:
         name: bind9
         state: restarted
-
-#        marker: "# {mark} ANSIBLE MANAGED BLOCK"
