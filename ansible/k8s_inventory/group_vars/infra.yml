@@ -1,4 +1,4 @@
 ---
 apt_pkgs:
-  - nfs-kernel-server
-  - nfs-common
+- nfs-kernel-server
+- nfs-common
