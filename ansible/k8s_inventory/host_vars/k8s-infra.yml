@@ -1,0 +1,7 @@
+---
+apt_pkgs:
+  - bind9
+  - bind9utils
+  - bind9-doc
+  - dnsutils
+domain_name: mg.org

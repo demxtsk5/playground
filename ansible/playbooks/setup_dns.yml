@@ -4,35 +4,36 @@
   hosts:
     - all
   gather_facts: true
-  vars:
-    - zone: "mg.org"
-    - packages:
-        - bind9
-        - dnsutils
-
   tasks:
     - name: Install neccessary packages
       apt:
         update_cache: true
-        name: "{{ packages }}"
+        name: "{{ apt_pkgs }}"
         state: present
-    - name: Place zone file in /etc/bind
-      ansible.builtin.template:
+    - name: Place zone.mg.org in /etc/bind
+      template:
         src: zone.j2
-        dest: /etc/bind/db.{{ zone }}
+        dest: /etc/bind/zone.mg.org
+        mode: 0644
         owner: root
         group: root
+    - name: Place reverse.mg.org in /etc/bind
+      template:
+        src: reverse.j2
+        dest: /etc/bind/reverse.mg.org
         mode: 0644
-    - name: Add zone to named.conf
-      blockinfile:
-        path: /etc/bind/named.conf.local
-        block: |
-          zone "{{ zone }}" {
-          type master;
-          file "/etc/bind/db.{{ zone }}";
-          };
-        marker: "# {mark} ANSIBLE MANAGED BLOCK"
+        owner: root
+        group: root    
+    - name: Place named.conf in /etc/bind
+      template:
+        src: named.conf.j2
+        dest: /etc/bind/named.conf.local
+        mode: 0644
+        owner: root
+        group: root
     - name: Restart bind9 service
       ansible.builtin.service:
         name: bind9
         state: restarted
+
+#        marker: "# {mark} ANSIBLE MANAGED BLOCK"

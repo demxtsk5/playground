@@ -3,7 +3,7 @@ all:
   children:
     admin:
       hosts:
-        infra:
+        k8s-infra:
           ansible_host: 192.168.56.101
     k8s:
       children:
