@@ -1,21 +1,19 @@
 ---
 all:
   children:
-    infra:
+    admin:
       hosts:
         infra:
-          ansible_host: 192.168.64.131
-          hostname: infra.mg.org 
-    kube:
+          ansible_host: 192.168.56.101
+    k8s:
       children:
         master:
-	  k8s-m1:
-            ansible_host: 192.168.64.132
-            hostname: k8s-m1.mg.org
-        worker:
-	  k8s-n1:
-            ansible_host: 192.168.64.133
-            hostname: k8s-n1.mg.org
-	  k8s-n2:
-            ansible_host: 192.168.64.134
-            hostname: k8s-n2.mg.org
+          hosts:
+            k8s-m1:
+              ansible_host: 192.168.56.102
+        nodes:
+          hosts:
+            k8s-n1:
+              ansible_host: 192.168.56.103
+            k8s-n2:
+              ansible_host: 192.168.56.104
