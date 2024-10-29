@@ -1,17 +1,33 @@
-apiVersion: metallb.io/v1beta1
-kind: IPAddressPool
-metadata:
-  name: pool
-  namespace: metallb-system
-spec:
-  addresses:
-  - 192.168.65.240 - 192.168.65.254
 ---
 apiVersion: metallb.io/v1beta1
 kind: L2Advertisement
 metadata:
-  name: l2-advertisement
+  name: l2advpool
   namespace: metallb-system
 spec:
   ipAddressPools:
-  - pool
+  - ip-pool-ingress
+  - ip-pool-services
+---
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: ip-pool-ingress
+  namespace: metallb-system
+spec:
+  addresses:
+  - 192.168.65.241 - 192.168.65.245
+  avoidBuggyIPs: true
+  serviceAllocation:
+    namespaces:
+      - ingress-nginx
+---
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: ip-pool-services
+  namespace: metallb-system
+spec:
+  addresses:
+  - 192.168.65.246 - 192.168.65.250
+  avoidBuggyIPs: true
