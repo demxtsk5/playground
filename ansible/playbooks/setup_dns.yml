@@ -10,17 +10,17 @@
         update_cache: true
         name: "{{ apt_pkgs }}"
         state: present
-    - name: Place zone.mg.org in /etc/bind
+    - name: Place zone.{{domain_name}} in /etc/bind
       template:
         src: zone.j2
-        dest: /etc/bind/zone.mg.org
+        dest: /etc/bind/zone.{{domain_name}}
         mode: 0644
         owner: root
         group: root
-    - name: Place reverse.mg.org in /etc/bind
+    - name: Place reverse.{{domain_name}} in /etc/bind
       template:
         src: reverse.j2
-        dest: /etc/bind/reverse.mg.org
+        dest: /etc/bind/reverse.{{domain_name}}
         mode: 0644
         owner: root
         group: root
