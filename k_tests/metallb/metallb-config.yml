@@ -16,7 +16,7 @@ metadata:
   namespace: metallb-system
 spec:
   addresses:
-  - 192.168.65.241 - 192.168.65.245
+  - 192.168.65.240 - 192.168.65.244
   avoidBuggyIPs: true
   serviceAllocation:
     namespaces:
@@ -29,5 +29,5 @@ metadata:
   namespace: metallb-system
 spec:
   addresses:
-  - 192.168.65.246 - 192.168.65.250
+  - 192.168.65.245 - 192.168.65.249
   avoidBuggyIPs: true
