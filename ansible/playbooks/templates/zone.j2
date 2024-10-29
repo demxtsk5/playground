@@ -7,10 +7,14 @@ $TTL    604800
                         2419200         ; Expire
                          604800 )       ; Negative Cache TTL
 ; Name server record 
-@       IN      NS      k8s-infra.{{domain_name}}.
+@       IN      NS      u01.{{domain_name}}.
 ; A record for name server
-k8s-infra   IN      A       192.168.56.101
+;k8s-infra   IN      A       192.168.56.101
+u01   IN      A       192.168.65.17
 ; A record for clients
-k8s-m1      IN      A       192.168.56.102
-k8s-n1      IN      A       192.168.56.103
-k8s-n2      IN      A       192.168.56.104
+;k8s-m1      IN      A       192.168.56.102
+;k8s-n1      IN      A       192.168.56.103
+;k8s-n2      IN      A       192.168.56.104
+k8s-m1      IN      A       192.168.65.27
+k8s-n1      IN      A       192.168.65.28
+k8s-n2      IN      A       192.168.65.29
