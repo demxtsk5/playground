@@ -4,4 +4,4 @@ apt_pkgs:
 - bind9utils
 - bind9-doc
 - dnsutils
-domain_name: mg.org
+domain_name: mg.net
