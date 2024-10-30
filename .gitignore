@@ -6,3 +6,4 @@ ex294/plays/display_facts.yml
 ansible/kubespray
 ansible/files
 vagrant/*/.vagrant
+schulung/ingress_haproxy/mg.net.*

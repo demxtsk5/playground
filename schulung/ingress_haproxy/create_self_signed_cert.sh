@@ -14,5 +14,5 @@ kubectl delete secret ${DOM}-tls --ignore-not-found -n argocd
  
 kubectl create secret tls ${DOM}-tls --key ${DOM}.key --cert ${DOM}.crt -n argocd
  
-kubectl delete -f argocd-ingress.yaml --ignore-not-found
-kubectl apply -f argocd-ingress.yaml
+kubectl delete -f argocd-ingress.yml --ignore-not-found
+kubectl apply -f argocd-ingress.yml
