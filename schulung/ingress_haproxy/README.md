@@ -1,4 +1,6 @@
-# Was habe ich:
+## Ingress Regeln K8S
+  
+### Was habe ich:
   
 - genau eine IP Adresse, z.B. 192.168.65.200
 - Verschiedene Sub-Domain, die auf die gleiche IP zeigen
@@ -9,7 +11,7 @@
   
 https://github.com/demxtsk5/playground/tree/d14ecc15db5bea528fa40032c89b4e42a1077a7b/schulung/ingress_haproxy
   
-## Umsetzung (steht alles im Git):
+### Umsetzung (steht alles im Git):
   
 - Ingress-nginx muss installiert sein (zum Beispiel über Kubespray)
 - Metallb bekommt via Konfig einen weiteren ip address pool für den ingress-nginx namespace
@@ -18,7 +20,7 @@ https://github.com/demxtsk5/playground/tree/d14ecc15db5bea528fa40032c89b4e42a107
   
 ### Wichtige Befehle:
   
-´´´mg0050@u01:~$ k get ing -n argocd
+``` mg0050@u01:~$ k get ing -n argocd
 NAME             CLASS   HOSTS           ADDRESS                       PORTS     AGE
 argocd-ingress   nginx   argocd.mg.net   192.168.65.28,192.168.65.29   80, 443   9h
 
@@ -30,4 +32,4 @@ mg.net-tls                    kubernetes.io/tls   2      9h
 repo-3847628628               Opaque              5      18h
 
 mg0050@u01:~$ k get all,ing,secret -n argocd
-< Ouput zu lang ;-) >´´´
+< Ouput zu lang ;-) >```
