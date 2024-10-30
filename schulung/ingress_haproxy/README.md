@@ -1,6 +1,6 @@
 ## Ingress Regeln K8S
 
-**In beiden Dateien gilt es die eigene Domain und den eigenen IP-Adresse-Bereich einzutragen!**
+**In beiden Dateien gilt es, die eigene Domain und den eigenen IP-Adresse-Bereich einzutragen!**
   
 ### Was habe ich:
   
