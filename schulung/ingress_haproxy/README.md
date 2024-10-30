@@ -21,7 +21,7 @@ https://github.com/demxtsk5/playground/tree/d14ecc15db5bea528fa40032c89b4e42a107
 ### Wichtige Befehle:
   
 ```
- mg0050@u01:~$ k get ing -n argocd
+mg0050@u01:~$ k get ing -n argocd
 NAME             CLASS   HOSTS           ADDRESS                       PORTS     AGE
 argocd-ingress   nginx   argocd.mg.net   192.168.65.28,192.168.65.29   80, 443   9h
 
