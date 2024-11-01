@@ -2,7 +2,7 @@
 - name: Setup DNS
   become: true
   hosts:
-    - all
+    - infra
   gather_facts: true
   tasks:
     - name: Install neccessary packages
