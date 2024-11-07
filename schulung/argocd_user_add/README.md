@@ -1,13 +1,15 @@
 # Add a user to argocd
 
-add two lines into argocd-cm.yml
+Execute both scripts and you'll get the current configmaps for ArgoCD
+
+- add two lines into argocd-cm.yml
 
 ```bash
 data:
   accounts.mg0050: apiKey, login
 ```
 
-Apply the file
+- Apply the file
 
 ```bash
 kubectl apply -f argocd-cm.yml -n argocd
@@ -15,14 +17,14 @@ kubectl apply -f argocd-cm.yml -n argocd
 
 ***Note: Please note that,by default Argo CD has admin and read-only roles.***
  
-add lines into argocd-rbac-cm.yml
+- Add lines into argocd-rbac-cm.yml
  
 ```bash
 data:
   policy.csv: g, mg0050, role:admin
 ```
 
-Login to argocd
+- Login to argocd via Commandline
 
 ```bash
 argocd login argocd.mg.net
@@ -34,7 +36,7 @@ Password:
 Context 'argocd.mg.net' updated
 ```
 
-Set password
+- Set password for new user
 
 ```bash
 argocd account update-password --account mg0050
