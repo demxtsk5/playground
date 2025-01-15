@@ -1,4 +1,6 @@
 ---
+volumes:
+  data:
 services:
   portainer:
     image: portainer/portainer-ce:2.21.5
@@ -8,7 +10,4 @@ services:
     volumes:
       - data:/data
       - /var/run/docker.sock:/var/run/docker.sock
-    external: true
     restart: unless-stopped
-volumes:
-  data:
