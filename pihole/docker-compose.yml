@@ -6,14 +6,14 @@ services:
    ports:
      - "53:53/udp"
      - "53:53/tcp"
-     - "67:67/udp"
      - "80:80/tcp"
+     - "443:443/tcp"
    environment:
      TZ: "Europe/Berlin"
-     WEBPASSWORD: "WpYGTQ_2V*ostzPx"
+     FTLCONF_dns_listeningMode: "all"
+     FTLCONF_webserver_api_password: "WpYGTQ_2V*ostzPx"
+     FTLCONF_dns_upstreams: 8.8.8.8;8.8.4.4
    volumes:
      - "./etc-pihole:/etc/pihole"
      - "./etc-dnsmasq.d:/etc/dnsmasq.d"
-   cap_add:
-     - NET_ADMIN
    restart: unless-stopped
