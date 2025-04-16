@@ -19,3 +19,11 @@ all:
           ansible_host: 192.168.65.18
         u03:
           ansible_host: 192.168.65.30
+    ex294:
+      hosts:
+        ex294_01:
+          ansible_host: 192.168.65.31
+        ex294_02:
+          ansible_host: 192.168.65.32
+        ex294_03:
+          ansible_host: 192.168.65.33
