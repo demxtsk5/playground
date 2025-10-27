@@ -3,7 +3,7 @@ volumes:
   data:
 services:
   portainer:
-    image: portainer/portainer-ce:2.33.1
+    image: portainer/portainer-ce:2.33.2
     ports:
       - 8000:8000
       - 9443:9443
