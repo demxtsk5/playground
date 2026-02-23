@@ -4,22 +4,38 @@
   hosts:
     - all
   tasks:
-    - name: Run APT upgrade
-      apt:
-        update_cache: true
-        autoclean: true
-        autoremove: true
-        upgrade: full
-      register: upgrade_output    
-    - name: Display output of apt ugrade
-      debug:
-        var: upgrade_output
-    - name: APT clean everything
-      apt:
-        update_cache: true
-        autoclean: true
-        autoremove: true
-    - name: Remove files in cache
-      file:
-        path: /tmp/*
-        state: absent
+    - block:
+        - name: Run APT upgrade
+          apt:
+            update_cache: true
+            autoclean: true
+            autoremove: true
+            upgrade: full
+          register: upgrade_output    
+        - name: Display output of apt ugrade
+          debug:
+            var: upgrade_output
+        - name: APT clean everything
+          apt:
+            update_cache: true
+            autoclean: true
+            autoremove: true
+        - name: Remove files in cache
+          file:
+            path: /tmp/*
+            state: absent
+      when: ansible_facts['os_family'] == "Debian"
+    - block:
+        - name: Run dnf update
+          dnf:
+            name: '*'
+            state: latest
+          register: upgrade_output    
+        - name: Display output of dnf update
+          debug:
+            var: upgrade_output
+        - name: Remove files in cache
+          file:
+            path: /tmp/*
+            state: absent
+      when: ansible_facts['os_family'] == "RedHat"
