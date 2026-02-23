@@ -27,3 +27,14 @@ all:
           ansible_host: 192.168.65.32
         ex294_03:
           ansible_host: 192.168.65.33
+    office:
+      hosts:
+        eins:
+          ansible_host: 192.168.64.3
+        zwei:
+          ansible_host: 192.168.64.4
+        drei:
+          ansible_host: 192.168.64.5
+        vier:
+          ansible_host: 192.168.64.6
+
