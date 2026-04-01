@@ -1,0 +1,32 @@
+---
+- name: Setup the TFTBOOT server
+  become: true
+  hosts:
+    - tftboot
+  tasks:
+    - name: Install missing packages
+      ansible.builtin.package:
+        name: "{{ extra_pkgs }}"
+        state: present
+      notify:
+        - dnsmasq
+        - nginx
+        - nfs-kernel-server
+    - name: Create necessary folders
+      ansible.builtin.file:
+        path: "{{ needed_folders }}"
+        state: directory
+        mode: '0777'
+    - name: Place config files
+      ansible.builtin.template:
+        src: dnsmasq.conf.j2
+        dest: /etc/dnsmasq.conf
+        owner: root
+        mode: '0644'
+      notify:
+        - dnsmasq
+    - name: Export Ubunut image
+      ansible.builtin.lineinfile:
+        path: /etc/exports
+        line: "/nfs/ubuntu *(ro,sync,no_subtree_check,all_squash)"
+        state: present

@@ -1,0 +1,21 @@
+# Nur auf dem Host-Only Adapter lauschen
+interface=enp0s2
+bind-interfaces
+
+# DHCP-Bereich für die Clients (Anpassung je nach deiner IP)
+# Format: Start-IP, End-IP, Lease-Zeit
+dhcp-range=192.168.100.100,192.168.100.150,12h
+{% for node in nodes %}
+dhcp-host={{ node.mac }},{{ node.ip }},{{ node.name }}
+{% endfor %}
+
+# TFTP-Server aktivieren
+enable-tftp
+tftp-root=/var/lib/tftpboot
+
+# Die Boot-Datei (Wichtig für PXE)
+dhcp-boot=boot.efi
+
+# Optional: Loggt alle Anfragen zur Fehlersuche
+log-dhcp
+log-queries

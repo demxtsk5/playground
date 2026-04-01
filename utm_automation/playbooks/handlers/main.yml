@@ -1,0 +1,16 @@
+- name: dnsmasq
+  service:
+    name: dnsmasq
+    state: restarted
+    enabled: true
+- name: nfs-kernel-server
+  service:
+    name: nfs-kernel-server
+    state: restarted
+    enabled: true
+- name: nginx
+  service:
+    name: nginx
+    state: restarted
+    enabled: true
+

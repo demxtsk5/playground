@@ -1,0 +1,23 @@
+---
+extra_pkgs:
+  - nginx
+  - dnsmasq
+  - nfs-kernel-server
+  - tftp-hpa
+
+needed_folders:
+  - var/lib/tftpboot/grub
+  - /var/lib/tftpboot/ubuntu
+  - /var/www/html/install
+  - /nfs/ubuntu
+
+nodes:
+  - mac: "00:11:22:33:44:55"
+    ip: "192.168.100.101"
+    name: "node-01"
+  - mac: "00:11:22:33:44:56"
+    ip: "192.168.100.102"
+    name: "node-02"
+  - mac: "00:11:22:33:44:57"
+    ip: "192.168.100.103"
+    name: "node-03"
