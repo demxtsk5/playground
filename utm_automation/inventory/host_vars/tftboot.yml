@@ -11,6 +11,10 @@ needed_folders:
   - /var/www/html/install
   - /nfs/ubuntu
 
+needed_files:
+  - meta-data
+  - vendor-data
+
 nodes:
   - mac: "00:11:22:33:44:55"
     ip: "192.168.100.101"

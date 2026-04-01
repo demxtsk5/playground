@@ -17,6 +17,10 @@
         path: "{{ needed_folders }}"
         state: directory
         mode: '0777'
+    - name: Touch some empty but needed files
+      ansible.builtin.file:
+        path: "/var/www/html/install/{{ needed_files }}"
+        state: touch
     - name: Place config files
       ansible.builtin.template:
         src: dnsmasq.conf.j2

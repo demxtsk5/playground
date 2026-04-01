@@ -1,0 +1,17 @@
+#cloud-config
+autoinstall:
+  version: 1
+  interactive-sections: []
+  locale: de_DE.UTF-8
+  keyboard:
+    layout: de
+  identity:
+    hostname: "{{ item.name }}"
+    username: ubuntu
+    password: "$6$GWSvwuxa9ET758Cx$bM4Zr2dWxJWVRb/xB7bEf0SxgJH52KE3agIL0fImRAoVr4xTEXVKmn0E9Eq58059VTznC3fmPqnDKeSS3KG1p0" 
+  ssh:
+    install-server: true
+    authorized-keys:
+      - "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDPqxEMsu0Nmi+B9yf6WdkkxWIUKzgc5VZUM4URMiZH0cawIHFd1SHiptcOaNm6DZPKF+haguMMSew/HPhiF2bFHTba3YYsAify2KuN1m2hUkaWGb+OSxPsp2d/FCh4wyMY9YMXnM+NDFx54meDLJwjfLdeRTlcZ/1YOIEpiMC6VSAmHG0c97H5yxfcS2mu8y7+mRUtIIFJbx7OFDe9v22+KXSEoChscQv57ORfAW/KkT1SZICTi4I0sHob5GcTcsO9jfj5BvknV3Xng14Jkz26SeYA16VkvMjdPofa/HgHGfLHkwZWjJBROkY3Hk0qbg02SAnvlhUjdxi1xZ1tDUVv mg0050@L00026.fritz.box"
+  user-data:
+    disable_root: true
