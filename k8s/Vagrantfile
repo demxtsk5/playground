@@ -1,0 +1,17 @@
+Vagrant.configure("2") do |config|
+  config.vm.box = "apple/ubuntu-22.04"
+  config.ssh.username = "admin"
+  config.ssh.password = "admin"
+
+  (1..3).each do |i|
+    config.vm.define "node-#{i}" do |node|
+      node.vm.provider "tart" do |t|
+        t.name = "ubuntu-node-#{i}"
+        t.image = "ghcr.io/cirruslabs/ubuntu:latest"
+        t.cpus = 2
+        t.memory = 2048
+        t.disk = 20
+      end
+    end
+  end
+end
