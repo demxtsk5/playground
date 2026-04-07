@@ -1,0 +1,24 @@
+---
+- name: Update Ubuntu
+  hosts:
+    - all
+  gather_facts: no
+  tasks:
+    - ansible.builtin.apt:
+        update_cache: yes
+        upgrade: dist
+    - ansible.builtin.apt:
+        name: "*"
+        state: latest
+        update_cache: yes
+- name: Prepare KubeSpray
+  hosts:
+    - u01
+  gather_facts: no
+  tasks:
+    - ansible.builtin.apt:
+        name: "{{ item }}"
+        state: latest
+      loop:
+        - python3.12-venv
+        - sshpass
