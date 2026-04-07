@@ -13,4 +13,8 @@
     name: nginx
     state: restarted
     enabled: true
-
+- name: qemuguestagent
+  service:
+    name: qemu-guest-agent
+    state: restarted
+    enabled: true

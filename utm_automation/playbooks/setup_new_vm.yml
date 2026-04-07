@@ -1,0 +1,21 @@
+---
+- name: Setup new VM
+  hosts:
+    - all
+  become: true
+  tasks:
+    - name: Install QEMU utils
+      ansible.builtin.package:
+        name: " {{ item }}"
+        state: present
+      loop:
+        - qemu-guest-agent
+      notify:
+        - qemu-guest-agent
+
+  handlers:
+    - name: qemu-guest-agent
+      service:
+        name: qemu-guest-agent
+        state: started
+        enabled: true

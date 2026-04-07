@@ -9,9 +9,9 @@
         name: "{{ extra_pkgs }}"
         state: present
       notify:
-        - dnsmasq
-        - nginx
-        - nfs-kernel-server
+        - Dnsmasq
+        - Nginx
+        - Nfs-kernel-server
     - name: Create necessary folders
       ansible.builtin.file:
         path: "{{ needed_folders }}"
@@ -21,6 +21,7 @@
       ansible.builtin.file:
         path: "/var/www/html/install/{{ needed_files }}"
         state: touch
+        mode: '0644'
     - name: Place config files
       ansible.builtin.template:
         src: dnsmasq.conf.j2
@@ -28,9 +29,26 @@
         owner: root
         mode: '0644'
       notify:
-        - dnsmasq
+        - Dnsmasq
     - name: Export Ubunut image
       ansible.builtin.lineinfile:
         path: /etc/exports
         line: "/nfs/ubuntu *(ro,sync,no_subtree_check,all_squash)"
         state: present
+
+  handlers:
+    - name: Dnsmasq
+      ansible.builtin.service:
+        name: dnsmasq
+        state: restarted
+        enabled: true
+    - name: Nfs-kernel-server
+      ansible.builtin.service:
+        name: nfs-kernel-server
+        state: restarted
+        enabled: true
+    - name: Nginx
+      ansible.builtin.service:
+        name: nginx
+        state: restarted
+        enabled: true
