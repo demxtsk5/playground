@@ -8,6 +8,6 @@ all:
     worker:
       hosts:
         u02:
-          ansible_host: 192.168.64.38
+          ansible_host: 192.168.64.40
         u03:
-          ansible_host: 192.168.64.39
+          ansible_host: 192.168.64.41
