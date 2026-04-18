@@ -4,6 +4,6 @@ services:
     image: nginx
     container_name: CloudInit
     volumes:
-      - .:/var/www/html:Z
+      - .:/usr/share/nginx/html:Z
     ports:
-      - 8080:8080
+      - 8080:80
