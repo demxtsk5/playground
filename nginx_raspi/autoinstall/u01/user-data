@@ -1,0 +1,16 @@
+#cloud-config
+autoinstall:
+  version: 1
+
+  keyboard:
+    layout: de
+    variant: ""
+
+  identity:
+    hostname: u01
+    username: admin
+    password: "$6$Dql6.DDcrf/Y8vfn$Z/Kgah6pVqJsMvEh70NJ.A.sTU/PNvAhu4LB8PAnBuaHu4tkP2NaUDttxYOARuUa5ucVEvhbx5.rbhbB2/j2m/"
+  
+  ssh:
+    install-server: true
+    allow-pw: true
