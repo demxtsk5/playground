@@ -8,4 +8,4 @@ ansible/files
 vagrant/*/.vagrant
 schulung/ingress_haproxy/mg.net.*
 .DS_Store
-seed/seed.img
+seed-u02/seed.img
