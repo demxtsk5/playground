@@ -3,7 +3,7 @@ volumes:
   data:
 services:
   portainer:
-    image: portainer/portainer-ce:2.39.3
+    image: portainer/portainer-ce:2.39.5
     container_name: Portainer
     ports:
       - 8000:8000
