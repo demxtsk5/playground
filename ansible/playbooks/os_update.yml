@@ -4,38 +4,40 @@
   hosts:
     - all
   tasks:
-    - block:
+    - name: Do OS updates on Debian
+      when: ansible_facts['os_family'] == "Debian"
+      block:
         - name: Run APT upgrade
-          apt:
+          ansible.legacy.apt:
             update_cache: true
             autoclean: true
             autoremove: true
             upgrade: full
-          register: upgrade_output    
+          register: upgrade_output
         - name: Display output of apt ugrade
-          debug:
+          ansible.legacy.debug:
             var: upgrade_output
         - name: APT clean everything
-          apt:
+          ansible.legacy.apt:
             update_cache: true
             autoclean: true
             autoremove: true
         - name: Remove files in cache
-          file:
+          ansible.legacy.file:
             path: /tmp/*
             state: absent
-      when: ansible_facts['os_family'] == "Debian"
-    - block:
+    - name: Do OS updates on Debian
+      when: ansible_facts['os_family'] == "RedHat"
+      block:
         - name: Run dnf update
-          dnf:
+          ansible.legacy.dnf:
             name: '*'
             state: latest
-          register: upgrade_output    
+          register: upgrade_output
         - name: Display output of dnf update
-          debug:
+          ansible.legacy.debug:
             var: upgrade_output
         - name: Remove files in cache
-          file:
+          ansible.legacy.file:
             path: /tmp/*
             state: absent
-      when: ansible_facts['os_family'] == "RedHat"
