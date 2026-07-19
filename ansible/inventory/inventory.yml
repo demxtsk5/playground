@@ -4,29 +4,29 @@ all:
     infra:
       hosts:
         u01:
-          ansible_host: 192.168.65.17
+          ansible_host: 192.168.64.17
     kube:
       hosts:
         kube01:
-          ansible_host: 192.168.65.27
+          ansible_host: 192.168.64.27
         kube02:
-          ansible_host: 192.168.65.28
+          ansible_host: 192.168.64.28
         kube03:
-          ansible_host: 192.168.65.29
+          ansible_host: 192.168.64.29
     test:
       hosts:
         u02:
-          ansible_host: 192.168.65.18
+          ansible_host: 192.168.64.18
         u03:
-          ansible_host: 192.168.65.30
+          ansible_host: 192.168.64.30
     ex294:
       hosts:
         ex294_01:
-          ansible_host: 192.168.65.31
+          ansible_host: 192.168.64.31
         ex294_02:
-          ansible_host: 192.168.65.32
+          ansible_host: 192.168.64.32
         ex294_03:
-          ansible_host: 192.168.65.33
+          ansible_host: 192.168.64.33
     office:
       hosts:
         eins:
