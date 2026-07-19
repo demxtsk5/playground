@@ -27,7 +27,6 @@ all:
           ansible_host: 192.168.65.32
         ex294_03:
           ansible_host: 192.168.65.33
-<<<<<<< HEAD
     office:
       hosts:
         eins:
@@ -38,8 +37,6 @@ all:
           ansible_host: 192.168.64.5
         vier:
           ansible_host: 192.168.64.6
-
-=======
     other:
       hosts:
         r01:
@@ -50,4 +47,3 @@ all:
           ansible_host: 192.168.64.37
         r04:
           ansible_host: 192.168.64.38
->>>>>>> 5f077ba (i don't know)
