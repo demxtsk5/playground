@@ -7,13 +7,21 @@
   tasks:
     - name: Common OS preparation
       ansible.builtin.include_tasks: tasks/upgrade-checks.yml
+      tags:
+        - preparation
     
     - name: Upgrade Control Plane
       ansible.builtin.include_tasks: tasks/upgrade-control-plane.yml
       when:
         - inventory_hostname in groups['kube_master']
+      tags:
+        - never
+        - upgrade_control_plane
 
     - name: Upgrade Workers
       ansible.builtin.include_tasks: tasks/upgrade-workers.yml
       when:
         - inventory_hostname in groups['kube_worker']
+      tags:
+        - never
+        - upgrade_workers
