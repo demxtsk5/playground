@@ -1,0 +1,67 @@
+---
+- name: Upgrade kubeadm on control plane
+  ansible.builtin.apt:
+    name: "kubeadm={{ upgrade_target_package_version }}"
+    state: present
+    allow_change_held_packages: true
+  when:
+    - inventory_hostname in groups['kube_master']
+
+- name: Verify kubeadm version
+  ansible.builtin.command:
+    cmd: kubeadm version -o short
+  register: kubeadm_version_after
+  changed_when: false
+  when:
+    - inventory_hostname in groups['kube_master']
+
+- name: Show kubeadm version
+  ansible.builtin.debug:
+    var: kubeadm_version_after.stdout
+  when:
+    - inventory_hostname in groups['kube_master']
+
+- name: Run kubeadm upgrade plan with new version
+  ansible.builtin.command:
+    cmd: kubeadm upgrade plan
+  register: kubeadm_upgrade_plan_after
+  changed_when: false
+  when:
+    - inventory_hostname in groups['kube_master']
+
+- name: Display new upgrade plan
+  ansible.builtin.debug:
+    var: kubeadm_upgrade_plan_after.stdout_lines
+  when:
+    - inventory_hostname in groups['kube_master']
+
+- name: Upgrade Kubernetes control plane
+  ansible.builtin.command:
+    cmd: kubeadm upgrade apply {{ upgrade_target_cluster_version }} -y
+  register: kubeadm_upgrade_apply
+  changed_when: "'SUCCESS' in kubeadm_upgrade_apply.stdout"
+  when:
+    - inventory_hostname in groups['kube_master']
+
+- name: Show upgrade result
+  ansible.builtin.debug:
+    var: kubeadm_upgrade_apply.stdout_lines
+  when:
+    - inventory_hostname in groups['kube_master']
+
+- name: Upgrade kubelet and kubectl on control plane
+  ansible.builtin.apt:
+    name:
+      - "kubelet={{ upgrade_target_package_version }}"
+      - "kubectl={{ upgrade_target_package_version }}"
+    state: present
+    allow_change_held_packages: true
+  when:
+    - inventory_hostname in groups['kube_master']
+
+- name: Restart kubelet
+  ansible.builtin.service:
+    name: kubelet
+    state: restarted
+  when:
+    - inventory_hostname in groups['kube_master']
