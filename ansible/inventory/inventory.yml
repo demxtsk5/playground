@@ -6,13 +6,20 @@ all:
         u01:
           ansible_host: 192.168.64.17
     kube:
-      hosts:
-        kube01:
-          ansible_host: 192.168.64.27
-        kube02:
-          ansible_host: 192.168.64.28
-        kube03:
-          ansible_host: 192.168.64.29
+      children:
+        kube_master:
+          hosts:
+            ks8-m1:
+              ansible_host: 192.168.64.27
+        kube_worker:
+          hosts:
+            k8s-n1:
+              ansible_host: 192.168.64.28
+            k8s-n2: 
+              ansible_host: 192.168.64.29
+      vars:
+        ansible_python_interpreter: /usr/bin/python3.12
+
     test:
       hosts:
         u02:

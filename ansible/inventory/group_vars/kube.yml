@@ -1,3 +1,3 @@
 ---
-apt_pkgs:
-  - nfs-common
+k8s_version: v1.28
+pod_network_cidr: 10.244.0.0/16

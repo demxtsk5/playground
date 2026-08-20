@@ -1,0 +1,19 @@
+---
+- name: Place Sysctl k8s.conf
+  ansible.builtin.copy:
+    src: sysctl.k8s.conf
+    dest: /etc/sysctl.d/k8s.conf
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Reload sysctl
+
+- name: Load overlay kernel module
+  community.general.modprobe:
+    name: overlay
+    state: present
+
+- name: Load br_netfilter kernel module
+  community.general.modprobe:
+    name: br_netfilter
+    state: present

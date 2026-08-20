@@ -1,0 +1,19 @@
+---
+- name: Disable swap
+  ansible.builtin.command:
+    cmd: swapoff -a
+  when: ansible_facts["swaptotal_mb"] > 0
+  changed_when: ansible_facts["swaptotal_mb"] > 0
+
+- name: Disable swap in fstab
+  ansible.builtin.replace:
+    path: /etc/fstab
+    regexp: '^([^#].*\sswap\s.*)$'
+    replace: '# \1'
+
+- name: Limit systemd journal size
+  ansible.builtin.lineinfile:
+    path: /etc/systemd/journald.conf
+    regexp: "^#?SystemMaxUse="
+    line: "SystemMaxUse=200M"
+  notify: Restart journald

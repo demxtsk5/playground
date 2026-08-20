@@ -1,0 +1,30 @@
+- name: Install containerd
+  ansible.builtin.package:
+    name: containerd
+    state: present
+
+- name: Create containerd folder
+  ansible.builtin.file:
+    path: /etc/containerd
+    state: directory
+    mode: '0755'
+    owner: root
+    group: root
+
+- name: Generate containerd config
+  ansible.builtin.shell:
+    cmd: containerd config default > /etc/containerd/config.toml
+    creates: /etc/containerd/config.toml
+
+- name: Enable SystemdCgroup
+  ansible.builtin.replace:
+    path: /etc/containerd/config.toml
+    regexp: 'SystemdCgroup = false'
+    replace: 'SystemdCgroup = true'
+  notify: Restart containerd
+
+- name: Start and enable containerd
+  ansible.builtin.service:
+    name: containerd
+    state: started
+    enabled: true
