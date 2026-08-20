@@ -1,8 +1,10 @@
+# Installiere das containerd Paket (Container Runtime)
 - name: Install containerd
   ansible.builtin.package:
     name: containerd
     state: present
 
+# Erstelle das Konfigurationsverzeichnis für containerd, falls es nicht existiert
 - name: Create containerd folder
   ansible.builtin.file:
     path: /etc/containerd
@@ -11,11 +13,13 @@
     owner: root
     group: root
 
+# Generiere die Standard-Konfiguration für containerd, falls keine vorhanden ist
 - name: Generate containerd config
   ansible.builtin.shell:
     cmd: containerd config default > /etc/containerd/config.toml
     creates: /etc/containerd/config.toml
 
+# Aktiviere die Nutzung von Systemd-Cgroups, was für Kubernetes empfohlen wird
 - name: Enable SystemdCgroup
   ansible.builtin.replace:
     path: /etc/containerd/config.toml
@@ -23,6 +27,7 @@
     replace: 'SystemdCgroup = true'
   notify: Restart containerd
 
+# Stelle sicher, dass containerd gestartet ist und beim Booten automatisch geladen wird
 - name: Start and enable containerd
   ansible.builtin.service:
     name: containerd

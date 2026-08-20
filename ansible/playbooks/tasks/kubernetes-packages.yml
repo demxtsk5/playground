@@ -1,10 +1,12 @@
 ---
+# Erstelle den Standardordner für GPG-Schlüssel von Drittanbietern
 - name: Verzeichnis für APT-Keyrings erstellen
   ansible.builtin.file:
     path: /etc/apt/keyrings
     state: directory
     mode: "0755"
 
+# Füge das offizielle Kubernetes Repository hinzu (deb822 Format)
 - name: Configure Kubernetes APT repository
   ansible.builtin.deb822_repository:
     name: kubernetes
@@ -16,10 +18,12 @@
     state: present
     install_python_debian: true
 
+# Aktualisiere die Paketlisten, damit die neuen Kubernetes-Pakete gefunden werden
 - name: Paket-Cache manuell aktualisieren
   ansible.builtin.apt:
     update_cache: true
 
+# Installiere notwendige Hilfspakete und die Kubernetes-Komponenten (kubelet, kubeadm, kubectl)
 - name: Install Packages
   ansible.builtin.package:
     name: "{{ item }}"
@@ -33,6 +37,7 @@
     - kubeadm
     - kubectl
 
+# Markiere Kubernetes-Pakete als "hold", damit sie nicht versehentlich bei einem system-upgrade aktualisiert werden
 - name: Versionen von K8s-Paketen einfrieren (hold)
   ansible.builtin.dpkg_selections:
     name: "{{ item }}"

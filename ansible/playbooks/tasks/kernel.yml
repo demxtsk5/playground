@@ -1,4 +1,6 @@
 ---
+# Kopiere die Kernel-Konfiguration für Kubernetes nach /etc/sysctl.d/
+# Dies aktiviert notwendige Netzwerk-Optionen (z.B. IP Forwarding)
 - name: Place Sysctl k8s.conf
   ansible.builtin.copy:
     src: sysctl.k8s.conf
@@ -8,11 +10,13 @@
     mode: "0644"
   notify: Reload sysctl
 
+# Lade das 'overlay' Kernel-Modul, welches für Container-Runtimes (wie containerd) benötigt wird
 - name: Load overlay kernel module
   community.general.modprobe:
     name: overlay
     state: present
 
+# Lade 'br_netfilter', damit Bridge-Traffic durch iptables verarbeitet werden kann (wichtig für K8s Networking)
 - name: Load br_netfilter kernel module
   community.general.modprobe:
     name: br_netfilter
