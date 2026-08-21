@@ -1,8 +1,8 @@
 ---
-k8s_version: v1.28
+k8s_version: v1.35
 pod_network_cidr: 10.244.0.0/16
 
 # --- Version for Upgrades ---
-upgrade_target_version: v1.31
-upgrade_target_package_version: 1.31.14-1.1
-upgrade_target_cluster_version: v1.31.14
+upgrade_target_version: v1.35
+upgrade_target_package_version: 1.35.8-1.1
+upgrade_target_cluster_version: v1.35.8
