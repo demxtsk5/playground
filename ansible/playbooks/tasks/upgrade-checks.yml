@@ -80,7 +80,11 @@
 
 - name: Simulate kubeadm upgrade package
   ansible.builtin.command:
-    cmd: apt-get -s install kubeadm=1.29.15-1.1
+    argv:
+      - apt-get
+      - -s
+      - install
+      - "kubeadm={{ upgrade_target_package_version }}"
   register: kubeadm_simulation
   changed_when: false
   when: inventory_hostname in groups['kube_master']
