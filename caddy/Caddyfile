@@ -1,0 +1,4 @@
+searx.home {
+    tls internal
+    reverse_proxy 192.168.178.140:8888
+}
