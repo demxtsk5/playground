@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   searxng:
-    image: docker.io/searxng/searxng:2026.10.4-d48c4b555
+    image: docker.io/searxng/searxng:2026.10.19-81371861f
     container_name: searxng
     restart: unless-stopped
     ports:
