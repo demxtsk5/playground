@@ -8,5 +8,14 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - dozzle_data:/data
+  lynis-report:
+    image: alpine:latest
+    container_name: lynis-report
+    restart: unless-stopped
+    volumes:
+      - /var/log/lynis-dozzle.log:/lynis.log:ro
+    command: tail -n 350 -F /lynis.log
+
 volumes:
   dozzle_data:
+
