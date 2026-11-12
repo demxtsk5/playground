@@ -1,3 +1,6 @@
+beszel/beszel_data/
+beszel/beszel_agent_data/
+uptime-kuma/uptime-kuma-data/
 graylog/graylog_folders
 pihole/etc-pihole/
 pihole/etc-dnsmasq.d/
