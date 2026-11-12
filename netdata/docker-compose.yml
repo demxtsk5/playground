@@ -2,32 +2,28 @@ services:
   netdata:
     image: netdata/netdata:stable
     container_name: netdata
-    hostname: raspberrypi
-    restart: unless-stopped
-
-    network_mode: host
     pid: host
-
+    network_mode: host
+    restart: unless-stopped
     cap_add:
       - SYS_PTRACE
-
+      - SYS_ADMIN
     security_opt:
-      - apparmor=unconfined
-
+      - apparmor:unconfined
     volumes:
-      - netdata-config:/etc/netdata
-      - netdata-lib:/var/lib/netdata
-      - netdata-cache:/var/cache/netdata
-
+      - netdataconfig:/etc/netdata
+      - netdatalib:/var/lib/netdata
+      - netdatacache:/var/cache/netdata
       - /etc/passwd:/host/etc/passwd:ro
       - /etc/group:/host/etc/group:ro
+      - /etc/localtime:/etc/localtime:ro
       - /proc:/host/proc:ro
       - /sys:/host/sys:ro
       - /etc/os-release:/host/etc/os-release:ro
-
+      - /var/log:/host/var/log:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
 
 volumes:
-  netdata-config:
-  netdata-lib:
-  netdata-cache:
+  netdataconfig:
+  netdatalib:
+  netdatacache:
