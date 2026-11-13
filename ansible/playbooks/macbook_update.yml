@@ -1,5 +1,5 @@
 ---
-- name: Homebrew, Mac App Store und Microsoft Software aktualisieren
+- name: Homebrew, Mac App Store, Microsoft und macOS Software aktualisieren
   hosts: localhost
   connection: local
   gather_facts: false
@@ -139,3 +139,33 @@
       when:
         - msupdate_stat.stat.exists
         - "'No updates available' not in msupdate_list.stdout"
+
+    # --- 4. MACOS SYSTEMUPDATES (softwareupdate) ---
+    - name: Verfügbare macOS-Systemupdates prüfen
+      ansible.builtin.command: softwareupdate --list
+      register: macos_updates_list
+      changed_when: false
+
+    - name: Verfügbare macOS-Systemupdates anzeigen
+      ansible.builtin.debug:
+        msg: >-
+          {{ macos_updates_list.stdout_lines
+             if ('No new software available.' not in macos_updates_list.stderr
+                 and 'No new software available.' not in macos_updates_list.stdout)
+             else ['macOS ist bereits auf dem neuesten Stand.'] }}
+
+    - name: Ausstehende macOS-Systemupdates installieren
+      ansible.builtin.command: softwareupdate --install --all
+      become: true
+      register: macos_updates_install
+      when:
+        - "'No new software available.' not in macos_updates_list.stderr"
+        - "'No new software available.' not in macos_updates_list.stdout"
+      changed_when: "'Installed' in macos_updates_install.stdout"
+
+    - name: Ergebnis der durchgeführten macOS-Updates ausgeben
+      ansible.builtin.debug:
+        var: macos_updates_install.stdout_lines
+      when:
+        - "'No new software available.' not in macos_updates_list.stderr"
+        - "'No new software available.' not in macos_updates_list.stdout"
