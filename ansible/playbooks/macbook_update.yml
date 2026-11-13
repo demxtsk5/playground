@@ -1,18 +1,59 @@
 ---
-- name: Mac App Store Software prüfen und aktualisieren
+- name: Homebrew und Mac App Store Software prüfen und aktualisieren
   hosts: localhost
   connection: local
   gather_facts: false
 
   vars:
     homebrew_prefix: "/Users/mg0050/homebrew"
+    homebrew_appdir: "/Users/mg0050/Applications"
     default_path: "/usr/bin:/bin:/usr/sbin:/sbin"
 
   environment:
     PATH: >-
       {{ homebrew_prefix }}/bin:{{ homebrew_prefix }}/sbin:/opt/homebrew/bin:/usr/local/bin:{{ ansible_env.PATH | default(default_path) }}
+    HOMEBREW_CASK_OPTS: "--appdir={{ homebrew_appdir }}"
 
   tasks:
+    - name: Prüfen, ob brew installiert ist
+      ansible.builtin.command: which brew
+      register: brew_check
+      changed_when: false
+      failed_when: false
+
+    - name: Fehlermeldung ausgeben, falls brew nicht gefunden wurde
+      ansible.builtin.fail:
+        msg: "Homebrew wurde unter '{{ homebrew_prefix }}' nicht gefunden."
+      when: brew_check.rc != 0
+
+    - name: Homebrew-Paketlisten aktualisieren
+      ansible.builtin.command: brew update
+      register: brew_update_result
+      changed_when: "'Already up-to-date.' not in brew_update_result.stdout"
+
+    - name: Veraltete Homebrew-Pakete und Casks prüfen
+      ansible.builtin.command: brew outdated --verbose
+      register: brew_outdated_packages
+      changed_when: false
+
+    - name: Veraltete Homebrew-Pakete anzeigen
+      ansible.builtin.debug:
+        msg: >-
+          {{ brew_outdated_packages.stdout_lines
+             if (brew_outdated_packages.stdout_lines | length > 0)
+             else ['Alle Homebrew-Pakete sind bereits auf dem neuesten Stand.'] }}
+
+    - name: Ausstehende Homebrew-Updates installieren
+      ansible.builtin.command: brew upgrade
+      register: brew_upgrade_result
+      when: brew_outdated_packages.stdout_lines | length > 0
+      changed_when: brew_upgrade_result.stdout != ""
+
+    - name: Ergebnis der durchgeführten Homebrew-Updates ausgeben
+      ansible.builtin.debug:
+        var: brew_upgrade_result.stdout_lines
+      when: brew_outdated_packages.stdout_lines | length > 0
+
     - name: Prüfen, ob mas installiert ist
       ansible.builtin.command: which mas
       register: mas_check
@@ -29,7 +70,7 @@
       register: mas_installed_apps
       changed_when: false
 
-    - name: Liste der installierten Software ausgeben
+    - name: Liste der installierten App-Store-Software ausgeben
       ansible.builtin.debug:
         var: mas_installed_apps.stdout_lines
 
@@ -38,7 +79,7 @@
       register: mas_outdated_apps
       changed_when: false
 
-    - name: Programme mit ausstehendem Update anzeigen
+    - name: App-Store-Programme mit ausstehendem Update anzeigen
       ansible.builtin.debug:
         msg: >-
           {{ mas_outdated_apps.stdout_lines
@@ -51,7 +92,7 @@
       when: mas_outdated_apps.stdout_lines | length > 0
       changed_when: mas_upgrade_result.stdout != ""
 
-    - name: Ergebnis der durchgeführten Updates ausgeben
+    - name: Ergebnis der durchgeführten App-Store-Updates ausgeben
       ansible.builtin.debug:
         var: mas_upgrade_result.stdout_lines
       when: mas_outdated_apps.stdout_lines | length > 0
