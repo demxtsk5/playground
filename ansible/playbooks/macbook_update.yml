@@ -1,13 +1,16 @@
 ---
-- name: Homebrew und Mac App Store Software prüfen und aktualisieren
+- name: Homebrew, Mac App Store und Microsoft Software aktualisieren
   hosts: localhost
   connection: local
   gather_facts: false
+  become: false
 
   vars:
     homebrew_prefix: "/Users/mg0050/homebrew"
     homebrew_appdir: "/Users/mg0050/Applications"
     default_path: "/usr/bin:/bin:/usr/sbin:/sbin"
+    msupdate_bin: >-
+      /Library/Application Support/Microsoft/MAU2.0/Microsoft AutoUpdate.app/Contents/MacOS/msupdate
 
   environment:
     PATH: >-
@@ -15,6 +18,7 @@
     HOMEBREW_CASK_OPTS: "--appdir={{ homebrew_appdir }}"
 
   tasks:
+    # --- 1. HOMEBREW ---
     - name: Prüfen, ob brew installiert ist
       ansible.builtin.command: which brew
       register: brew_check
@@ -54,6 +58,7 @@
         var: brew_upgrade_result.stdout_lines
       when: brew_outdated_packages.stdout_lines | length > 0
 
+    # --- 2. MAC APP STORE (mas) ---
     - name: Prüfen, ob mas installiert ist
       ansible.builtin.command: which mas
       register: mas_check
@@ -96,3 +101,41 @@
       ansible.builtin.debug:
         var: mas_upgrade_result.stdout_lines
       when: mas_outdated_apps.stdout_lines | length > 0
+
+    # --- 3. MICROSOFT AUTOUPDATE (msupdate) ---
+    - name: Prüfen, ob Microsoft AutoUpdate (msupdate) vorhanden ist
+      ansible.builtin.stat:
+        path: "{{ msupdate_bin }}"
+      register: msupdate_stat
+
+    - name: Verfügbare Microsoft-Updates prüfen
+      ansible.builtin.command:
+        argv:
+          - "{{ msupdate_bin }}"
+          - "--list"
+      register: msupdate_list
+      when: msupdate_stat.stat.exists
+      changed_when: false
+
+    - name: Ausstehende Microsoft-Updates anzeigen
+      ansible.builtin.debug:
+        var: msupdate_list.stdout_lines
+      when: msupdate_stat.stat.exists
+
+    - name: Ausstehende Microsoft-Updates installieren
+      ansible.builtin.command:
+        argv:
+          - "{{ msupdate_bin }}"
+          - "--install"
+      register: msupdate_install
+      when:
+        - msupdate_stat.stat.exists
+        - "'No updates available' not in msupdate_list.stdout"
+      changed_when: "'No updates available' not in msupdate_install.stdout"
+
+    - name: Ergebnis der durchgeführten Microsoft-Updates ausgeben
+      ansible.builtin.debug:
+        var: msupdate_install.stdout_lines
+      when:
+        - msupdate_stat.stat.exists
+        - "'No updates available' not in msupdate_list.stdout"
