@@ -1,0 +1,57 @@
+---
+- name: Mac App Store Software prüfen und aktualisieren
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  vars:
+    homebrew_prefix: "/Users/mg0050/homebrew"
+    default_path: "/usr/bin:/bin:/usr/sbin:/sbin"
+
+  environment:
+    PATH: >-
+      {{ homebrew_prefix }}/bin:{{ homebrew_prefix }}/sbin:/opt/homebrew/bin:/usr/local/bin:{{ ansible_env.PATH | default(default_path) }}
+
+  tasks:
+    - name: Prüfen, ob mas installiert ist
+      ansible.builtin.command: which mas
+      register: mas_check
+      changed_when: false
+      failed_when: false
+
+    - name: Fehlermeldung ausgeben, falls mas nicht gefunden wurde
+      ansible.builtin.fail:
+        msg: "Das Tool 'mas' wurde nicht gefunden. Bitte installiere es zuerst mit '{{ homebrew_prefix }}/bin/brew install mas'."
+      when: mas_check.rc != 0
+
+    - name: Installierte App-Store-Programme abrufen
+      ansible.builtin.command: mas list
+      register: mas_installed_apps
+      changed_when: false
+
+    - name: Liste der installierten Software ausgeben
+      ansible.builtin.debug:
+        var: mas_installed_apps.stdout_lines
+
+    - name: Verfügbare Updates für App-Store-Programme prüfen
+      ansible.builtin.command: mas outdated
+      register: mas_outdated_apps
+      changed_when: false
+
+    - name: Programme mit ausstehendem Update anzeigen
+      ansible.builtin.debug:
+        msg: >-
+          {{ mas_outdated_apps.stdout_lines
+             if (mas_outdated_apps.stdout_lines | length > 0)
+             else ['Alle App-Store-Programme sind bereits auf dem neuesten Stand.'] }}
+
+    - name: Ausstehende App-Store-Updates installieren
+      ansible.builtin.command: mas upgrade
+      register: mas_upgrade_result
+      when: mas_outdated_apps.stdout_lines | length > 0
+      changed_when: mas_upgrade_result.stdout != ""
+
+    - name: Ergebnis der durchgeführten Updates ausgeben
+      ansible.builtin.debug:
+        var: mas_upgrade_result.stdout_lines
+      when: mas_outdated_apps.stdout_lines | length > 0
