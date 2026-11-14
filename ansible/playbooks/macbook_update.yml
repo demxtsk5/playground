@@ -2,20 +2,22 @@
 - name: Homebrew, Mac App Store, Microsoft und macOS Software aktualisieren
   hosts: localhost
   connection: local
-  gather_facts: false
+  gather_facts: true
   become: false
 
   vars:
     homebrew_prefix: "/Users/mg0050/homebrew"
     homebrew_appdir: "/Users/mg0050/Applications"
     default_path: "/usr/bin:/bin:/usr/sbin:/sbin"
+    askpass_script: "/Users/mg0050/.local/bin/macos-askpass.sh"
     msupdate_bin: >-
       /Library/Application Support/Microsoft/MAU2.0/Microsoft AutoUpdate.app/Contents/MacOS/msupdate
 
   environment:
     PATH: >-
-      {{ homebrew_prefix }}/bin:{{ homebrew_prefix }}/sbin:/opt/homebrew/bin:/usr/local/bin:{{ ansible_env.PATH | default(default_path) }}
+      {{ homebrew_prefix }}/bin:{{ homebrew_prefix }}/sbin:/opt/homebrew/bin:/usr/local/bin:{{ ansible_facts["env"]["PATH"] | default(default_path) }}
     HOMEBREW_CASK_OPTS: "--appdir={{ homebrew_appdir }}"
+    SUDO_ASKPASS: "{{ askpass_script }}"
 
   tasks:
     # --- 1. HOMEBREW ---
@@ -155,8 +157,7 @@
              else ['macOS ist bereits auf dem neuesten Stand.'] }}
 
     - name: Ausstehende macOS-Systemupdates installieren
-      ansible.builtin.command: softwareupdate --install --all
-      become: true
+      ansible.builtin.command: sudo -A softwareupdate --install --all
       register: macos_updates_install
       when:
         - "'No new software available.' not in macos_updates_list.stderr"
