@@ -20,6 +20,7 @@ beszel.lan {
 
 pihole.lan {
     tls internal
+    redir / /admin
     reverse_proxy 192.168.178.140:8053
 }
 
