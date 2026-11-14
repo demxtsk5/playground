@@ -1,31 +1,26 @@
-searx.lan {
-    tls internal
-    reverse_proxy 192.168.178.140:8888
-}
-
-dozzle.lan {
-    tls internal
+dozzle.mg0050.duckdns.org {
+    basic_auth {
+        admin $2a$14$HIER_DEINEN_PASSWORT_HASH_EINFUEGEN
+    }
     reverse_proxy 192.168.178.140:9999
 }
 
-kuma.lan {
-    tls internal
+searx.mg0050.duckdns.org {
+    basic_auth {
+        admin $2a$14$HIER_DEINEN_PASSWORT_HASH_EINFUEGEN
+    }
+    reverse_proxy 192.168.178.140:8888
+}
+
+kuma.mg0050.duckdns.org {
     reverse_proxy 192.168.178.140:3001
 }
 
-beszel.lan {
-    tls internal
+beszel.mg0050.duckdns.org {
     reverse_proxy 192.168.178.140:8090
 }
 
-pihole.lan {
-    tls internal
-    redir / /admin
-    reverse_proxy 192.168.178.140:8053
-}
-
-portainer.lan {
-    tls internal
+portainer.mg0050.duckdns.org {
     reverse_proxy https://192.168.178.140:9443 {
         transport http {
             tls_insecure_skip_verify
