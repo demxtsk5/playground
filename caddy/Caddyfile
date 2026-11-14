@@ -1,29 +1,62 @@
-dozzle.mg0050.duckdns.org {
-    basic_auth {
-        admin $2a$14$449s3sDdqt0kk9iTJnVIL.ypAGdun4nsE0NRHyNIJ/ufNNFaPWpLu
-    }
-    reverse_proxy 192.168.178.140:9999
+# ==========================================
+# 1. LOKALER ZUGRIFF (nur im Heimnetz / VPN)
+# ==========================================
+
+searx.lan {
+	tls internal
+	reverse_proxy 192.168.178.140:8888
 }
 
-searx.mg0050.duckdns.org {
-    basic_auth {
-        admin $2a$14$449s3sDdqt0kk9iTJnVIL.ypAGdun4nsE0NRHyNIJ/ufNNFaPWpLu
-    }
-    reverse_proxy 192.168.178.140:8888
+dozzle.lan {
+	tls internal
+	reverse_proxy 192.168.178.140:9999
+}
+
+kuma.lan {
+	tls internal
+	reverse_proxy 192.168.178.140:3001
+}
+
+beszel.lan {
+	tls internal
+	reverse_proxy 192.168.178.140:8090
+}
+
+pihole.lan {
+	tls internal
+	redir / /admin
+	reverse_proxy 192.168.178.140:8053
+}
+
+portainer.lan {
+	tls internal
+	reverse_proxy https://192.168.178.140:9443 {
+		transport http {
+			tls_insecure_skip_verify
+		}
+	}
+}
+
+# ==========================================
+# 2. ÖFFENTLICHER ZUGRIFF (Let's Encrypt SSL)
+# ==========================================
+
+dozzle.mg0050.duckdns.org {
+	reverse_proxy 192.168.178.140:9999
 }
 
 kuma.mg0050.duckdns.org {
-    reverse_proxy 192.168.178.140:3001
+	reverse_proxy 192.168.178.140:3001
 }
 
 beszel.mg0050.duckdns.org {
-    reverse_proxy 192.168.178.140:8090
+	reverse_proxy 192.168.178.140:8090
 }
 
 portainer.mg0050.duckdns.org {
-    reverse_proxy https://192.168.178.140:9443 {
-        transport http {
-            tls_insecure_skip_verify
-        }
-    }
+	reverse_proxy https://192.168.178.140:9443 {
+		transport http {
+			tls_insecure_skip_verify
+		}
+	}
 }
