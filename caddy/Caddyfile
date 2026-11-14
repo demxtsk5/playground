@@ -1,4 +1,33 @@
-searx.home {
+searx.lan {
     tls internal
     reverse_proxy 192.168.178.140:8888
+}
+
+dozzle.lan {
+    tls internal
+    reverse_proxy 192.168.178.140:9999
+}
+
+kuma.lan {
+    tls internal
+    reverse_proxy 192.168.178.140:3001
+}
+
+beszel.lan {
+    tls internal
+    reverse_proxy 192.168.178.140:8090
+}
+
+pihole.lan {
+    tls internal
+    reverse_proxy 192.168.178.140:8053
+}
+
+portainer.lan {
+    tls internal
+    reverse_proxy https://192.168.178.140:9443 {
+        transport http {
+            tls_insecure_skip_verify
+        }
+    }
 }
