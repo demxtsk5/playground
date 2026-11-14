@@ -1,13 +1,13 @@
 dozzle.mg0050.duckdns.org {
     basic_auth {
-        admin $2a$14$HIER_DEINEN_PASSWORT_HASH_EINFUEGEN
+        admin $2a$14$449s3sDdqt0kk9iTJnVIL.ypAGdun4nsE0NRHyNIJ/ufNNFaPWpLu
     }
     reverse_proxy 192.168.178.140:9999
 }
 
 searx.mg0050.duckdns.org {
     basic_auth {
-        admin $2a$14$HIER_DEINEN_PASSWORT_HASH_EINFUEGEN
+        admin $2a$14$449s3sDdqt0kk9iTJnVIL.ypAGdun4nsE0NRHyNIJ/ufNNFaPWpLu
     }
     reverse_proxy 192.168.178.140:8888
 }
