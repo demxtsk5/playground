@@ -4,7 +4,7 @@ services:
     container_name: beszel
     restart: unless-stopped
     ports:
-      - "8090:8090"
+      - "127.0.0.1:8090:8090"
     volumes:
       - ./beszel_data:/beszel_data
 
@@ -20,4 +20,4 @@ services:
       LISTEN: 45876
       KEY: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPKZ2+xE5BYfBYHwM04mxZHre/Cd2VNVs1Lj4CAvmTsC"
       TOKEN: "266-d630ab39dbc-36cb-99ec6a132"
-      HUB_URL: "http://192.168.178.140:8090"
+      HUB_URL: "http://127.0.0.1:8090"
