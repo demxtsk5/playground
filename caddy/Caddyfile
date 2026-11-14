@@ -4,37 +4,33 @@
 
 searx.lan {
 	tls internal
-	reverse_proxy 192.168.178.140:8888
+	reverse_proxy searxng:8080
 }
 
 dozzle.lan {
 	tls internal
-	reverse_proxy 192.168.178.140:9999
+	reverse_proxy dozzle:8080
 }
 
 kuma.lan {
 	tls internal
-	reverse_proxy 192.168.178.140:3001
+	reverse_proxy uptime-kuma:3001
 }
 
 beszel.lan {
 	tls internal
-	reverse_proxy 192.168.178.140:8090
+	reverse_proxy beszel:8090
 }
 
 pihole.lan {
 	tls internal
 	redir / /admin
-	reverse_proxy 192.168.178.140:8053
+	reverse_proxy pihole:80
 }
 
 portainer.lan {
 	tls internal
-	reverse_proxy https://192.168.178.140:9443 {
-		transport http {
-			tls_insecure_skip_verify
-		}
-	}
+	reverse_proxy portainer:9000
 }
 
 # ==========================================
@@ -42,15 +38,15 @@ portainer.lan {
 # ==========================================
 
 dozzle.mg0050.duckdns.org {
-	reverse_proxy 192.168.178.140:9999
+	reverse_proxy dozzle:8080
 }
 
 kuma.mg0050.duckdns.org {
-	reverse_proxy 192.168.178.140:3001
+	reverse_proxy uptime-kuma:3001
 }
 
 beszel.mg0050.duckdns.org {
-	reverse_proxy 192.168.178.140:8090
+	reverse_proxy beszel:8090
 }
 
 portainer.mg0050.duckdns.org {
@@ -60,3 +56,4 @@ portainer.mg0050.duckdns.org {
 		}
 	}
 }
+

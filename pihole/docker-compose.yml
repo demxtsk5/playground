@@ -1,19 +1,24 @@
 ---
 services:
   pihole:
-   container_name: pihole
-   image: pihole/pihole:2026.10.0
-   ports:
-     - "53:53/tcp"
-     - "53:53/udp"
-     - "8053:80/tcp"
-     - "8453:443/tcp"
-   environment:
-     TZ: "Europe/Berlin"
-     FTLCONF_dns_listeningMode: "all"
-     FTLCONF_webserver_api_password: "WpYGTQ_2V*ostzPx"
-     FTLCONF_dns_upstreams: 8.8.8.8;8.8.4.4
-   volumes:
-     - "./etc-pihole:/etc/pihole"
-     - "./etc-dnsmasq.d:/etc/dnsmasq.d"
-   restart: unless-stopped
+    container_name: pihole
+    image: pihole/pihole:2026.10.0
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+    environment:
+      TZ: "Europe/Berlin"
+      FTLCONF_dns_listeningMode: "all"
+      FTLCONF_webserver_api_password: "WpYGTQ_2V*ostzPx"
+      FTLCONF_dns_upstreams: 8.8.8.8;8.8.4.4
+    volumes:
+      - "./etc-pihole:/etc/pihole"
+      - "./etc-dnsmasq.d:/etc/dnsmasq.d"
+    restart: unless-stopped
+    networks:
+      - caddy_net
+
+networks:
+  caddy_net:
+    external: true
+

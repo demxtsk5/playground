@@ -7,6 +7,8 @@ services:
       - "127.0.0.1:8090:8090"
     volumes:
       - ./beszel_data:/beszel_data
+    networks:
+      - caddy_net
 
   beszel-agent:
     image: henrygd/beszel-agent:latest
@@ -21,3 +23,8 @@ services:
       KEY: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPKZ2+xE5BYfBYHwM04mxZHre/Cd2VNVs1Lj4CAvmTsC"
       TOKEN: "266-d630ab39dbc-36cb-99ec6a132"
       HUB_URL: "http://127.0.0.1:8090"
+
+networks:
+  caddy_net:
+    external: true
+
