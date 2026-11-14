@@ -5,8 +5,9 @@ services:
     restart: unless-stopped
 
     ports:
-      - "8081:80"
-      - "8444:443"
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
 
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile:ro
