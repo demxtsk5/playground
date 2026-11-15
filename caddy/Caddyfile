@@ -29,8 +29,12 @@ pihole.lan {
 }
 
 portainer.lan {
-	tls internal
-	reverse_proxy portainer:9000
+    tls internal
+    reverse_proxy https://portainer:9443 {
+        transport http {
+            tls_insecure_skip_verify
+        }
+    }
 }
 
 # ==========================================
@@ -50,10 +54,9 @@ beszel.mg0050.duckdns.org {
 }
 
 portainer.mg0050.duckdns.org {
-	reverse_proxy https://192.168.178.140:9443 {
-		transport http {
-			tls_insecure_skip_verify
-		}
-	}
+	reverse_proxy https://portainer:9443 {
+           transport http {
+               tls_insecure_skip_verify
+           }
+        }
 }
-
