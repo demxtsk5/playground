@@ -1,0 +1,55 @@
+---
+- name: Homelab Docker Stacks aktualisieren
+  hosts: localhost
+  connection: local
+  gather_facts: false
+  vars_files:
+    - versions.yml
+  vars:
+    base_dir: "/home/mg0050/git/playground"
+    stacks:
+      - name: autoheal
+        template: autoheal.yml.j2
+      - name: beszel
+        template: beszel.yml.j2
+      - name: caddy
+        template: caddy.yml.j2
+      - name: dozzle
+        template: dozzle.yml.j2
+      - name: portainer
+        template: portainer.yml.j2
+      - name: searxng
+        template: searxng.yml.j2
+      - name: uptime-kuma
+        template: uptime-kuma.yml.j2
+
+  tasks:
+    - name: Stelle sicher, dass Projekt-Ordner existieren
+      ansible.builtin.file:
+        path: "{{ base_dir }}/{{ item.name }}"
+        state: directory
+        mode: '0755'
+      loop: "{{ stacks }}"
+
+    - name: Rendere docker-compose.yml aus Templates
+      ansible.builtin.template:
+        src: "templates/{{ item.template }}"
+        dest: "{{ base_dir }}/{{ item.name }}/docker-compose.yml"
+        mode: '0644'
+      loop: "{{ stacks }}"
+      register: compose_files
+
+    - name: Starte Stacks neu, falls sich die Compose-Datei geändert hat
+      community.docker.docker_compose_v2:
+        project_src: "{{ base_dir }}/{{ item.item.name }}"
+        pull: always
+        state: present
+      loop: "{{ compose_files.results }}"
+      when: item.changed
+
+    - name: Alte ungenutzte Docker-Images aufräumen
+      community.docker.docker_prune:
+        images: true
+        images_filters:
+          dangling: false
+

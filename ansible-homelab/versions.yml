@@ -1,0 +1,10 @@
+versions:
+  caddy: "2.11.7"
+  pihole: "2026.10.0"
+  searxng: "2026.10.19-81371861f"
+  portainer: "2.45.3"
+  uptime_kuma: "2-slim"
+  dozzle: "v8.12.0"       # Statt :latest
+  beszel: "0.10.2"        # Statt :latest
+  autoheal: "1.2.0"       # Statt :latest
+  alpine: "3.21"          # Statt :latest

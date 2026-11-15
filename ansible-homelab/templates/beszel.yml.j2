@@ -1,0 +1,34 @@
+services:
+  beszel:
+    image: henrygd/beszel:{{ versions.beszel }}
+    container_name: beszel
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8090:8090"
+    volumes:
+      - ./beszel_data:/beszel_data
+    networks:
+      - caddy_net
+    healthcheck:
+      test: ["CMD", "/beszel", "health", "--url", "http://localhost:8090"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  beszel-agent:
+    image: henrygd/beszel-agent:{{ versions.beszel }}
+    container_name: beszel-agent
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./beszel_agent_data:/var/lib/beszel-agent
+    environment:
+      LISTEN: 45876
+      KEY: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPKZ2+xE5BYfBYHwM04mxZHre/Cd2VNVs1Lj4CAvmTsC"
+      TOKEN: "266-d630ab39dbc-36cb-99ec6a132"
+      HUB_URL: "http://127.0.0.1:8090"
+
+networks:
+  caddy_net:
+    external: true

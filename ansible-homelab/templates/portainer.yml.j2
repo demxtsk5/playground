@@ -1,0 +1,19 @@
+---
+volumes:
+  data:
+
+services:
+  portainer:
+    image: portainer/portainer-ce:{{ versions.portainer }}
+    container_name: portainer
+    volumes:
+      - data:/data
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: unless-stopped
+    networks:
+      - caddy_net
+
+networks:
+  caddy_net:
+    external: true
+

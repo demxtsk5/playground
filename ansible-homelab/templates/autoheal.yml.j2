@@ -1,0 +1,12 @@
+services:
+  autoheal:
+    image: willfarrell/autoheal:{{ versions.autoheal }}
+    container_name: autoheal
+    restart: unless-stopped
+    environment:
+      - AUTOHEAL_CONTAINER_LABEL=all
+      - AUTOHEAL_INTERVAL=5
+      - AUTOHEAL_START_PERIOD=15
+      - AUTOHEAL_DEFAULT_STOP_TIMEOUT=5
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock

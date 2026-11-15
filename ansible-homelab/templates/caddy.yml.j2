@@ -1,0 +1,26 @@
+services:
+  caddy:{{ versions.caddy }}
+    image: caddy:{{ versions.caddy }}
+    container_name: caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./caddy_data:/data
+      - ./caddy_config:/config
+    networks:
+      - caddy_net
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:8080/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 2
+      start_period: 10s
+
+networks:
+  caddy_net:
+    external: true
+
