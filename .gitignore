@@ -1,4 +1,5 @@
-caddy/caddy_data/caddy/
+caddy/caddy_data/
+caddy/caddy_config/
 beszel/beszel_data/
 beszel/beszel_agent_data/
 uptime-kuma/uptime-kuma-data/
