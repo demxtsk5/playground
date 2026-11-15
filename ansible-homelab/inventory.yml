@@ -1,0 +1,6 @@
+all:
+  hosts:
+    raspberrypi:
+      ansible_host: 192.168.178.140
+      ansible_user: mg0050
+      ansible_python_interpreter: /usr/bin/python3.11
