@@ -1,8 +1,6 @@
 ---
 - name: Homelab Docker Stacks aktualisieren
-  hosts: localhost
-  connection: local
-  gather_facts: false
+  hosts: raspberrypi
   vars_files:
     - versions.yml
   vars:
