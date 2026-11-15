@@ -2,6 +2,10 @@
 # 1. LOKALER ZUGRIFF (nur im Heimnetz / VPN)
 # ==========================================
 
+:8080 {
+    respond /health "OK" 200
+}
+
 searx.lan {
 	tls internal
 	reverse_proxy searxng:8080
