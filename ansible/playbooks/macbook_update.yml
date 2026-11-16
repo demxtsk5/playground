@@ -21,152 +21,168 @@
 
   tasks:
     # --- 1. HOMEBREW ---
-    - name: Prüfen, ob brew installiert ist
-      ansible.builtin.command: which brew
-      register: brew_check
-      changed_when: false
-      failed_when: false
+    - name: Homebrew-Wartung und Updates durchführen
+      tags:
+        - homebrew
+      block:
+        - name: Prüfen, ob brew installiert ist
+          ansible.builtin.command: which brew
+          register: brew_check
+          changed_when: false
+          failed_when: false
 
-    - name: Fehlermeldung ausgeben, falls brew nicht gefunden wurde
-      ansible.builtin.fail:
-        msg: "Homebrew wurde unter '{{ homebrew_prefix }}' nicht gefunden."
-      when: brew_check.rc != 0
+        - name: Fehlermeldung ausgeben, falls brew nicht gefunden wurde
+          ansible.builtin.fail:
+            msg: "Homebrew wurde unter '{{ homebrew_prefix }}' nicht gefunden."
+          when: brew_check.rc != 0
 
-    - name: Homebrew-Paketlisten aktualisieren
-      ansible.builtin.command: brew update
-      register: brew_update_result
-      changed_when: "'Already up-to-date.' not in brew_update_result.stdout"
+        - name: Homebrew-Paketlisten aktualisieren
+          ansible.builtin.command: brew update
+          register: brew_update_result
+          changed_when: "'Already up-to-date.' not in brew_update_result.stdout"
 
-    - name: Veraltete Homebrew-Pakete und Casks prüfen
-      ansible.builtin.command: brew outdated --verbose
-      register: brew_outdated_packages
-      changed_when: false
+        - name: Veraltete Homebrew-Pakete und Casks prüfen
+          ansible.builtin.command: brew outdated --verbose
+          register: brew_outdated_packages
+          changed_when: false
 
-    - name: Veraltete Homebrew-Pakete anzeigen
-      ansible.builtin.debug:
-        msg: >-
-          {{ brew_outdated_packages.stdout_lines
-             if (brew_outdated_packages.stdout_lines | length > 0)
-             else ['Alle Homebrew-Pakete sind bereits auf dem neuesten Stand.'] }}
+        - name: Veraltete Homebrew-Pakete anzeigen
+          ansible.builtin.debug:
+            msg: >-
+              {{ brew_outdated_packages.stdout_lines
+              if (brew_outdated_packages.stdout_lines | length > 0)
+              else ['Alle Homebrew-Pakete sind bereits auf dem neuesten Stand.'] }}
 
-    - name: Ausstehende Homebrew-Updates installieren
-      ansible.builtin.command: brew upgrade
-      register: brew_upgrade_result
-      when: brew_outdated_packages.stdout_lines | length > 0
-      changed_when: brew_upgrade_result.stdout != ""
+        - name: Ausstehende Homebrew-Updates installieren
+          ansible.builtin.command: brew upgrade
+          register: brew_upgrade_result
+          when: brew_outdated_packages.stdout_lines | length > 0
+          changed_when: brew_upgrade_result.stdout != ""
 
-    - name: Ergebnis der durchgeführten Homebrew-Updates ausgeben
-      ansible.builtin.debug:
-        var: brew_upgrade_result.stdout_lines
-      when: brew_outdated_packages.stdout_lines | length > 0
+        - name: Ergebnis der durchgeführten Homebrew-Updates ausgeben
+          ansible.builtin.debug:
+            var: brew_upgrade_result.stdout_lines
+          when: brew_outdated_packages.stdout_lines | length > 0
 
     # --- 2. MAC APP STORE (mas) ---
-    - name: Prüfen, ob mas installiert ist
-      ansible.builtin.command: which mas
-      register: mas_check
-      changed_when: false
-      failed_when: false
+    - name: Mac-App-Store-Wartung und Updates durchführen
+      tags:
+        - apps
+      block:
+        - name: Prüfen, ob mas installiert ist
+          ansible.builtin.command: which mas
+          register: mas_check
+          changed_when: false
+          failed_when: false
 
-    - name: Fehlermeldung ausgeben, falls mas nicht gefunden wurde
-      ansible.builtin.fail:
-        msg: "Das Tool 'mas' wurde nicht gefunden. Bitte installiere es zuerst mit '{{ homebrew_prefix }}/bin/brew install mas'."
-      when: mas_check.rc != 0
+        - name: Fehlermeldung ausgeben, falls mas nicht gefunden wurde
+          ansible.builtin.fail:
+            msg: "Das Tool 'mas' wurde nicht gefunden. Bitte installiere es zuerst mit '{{ homebrew_prefix }}/bin/brew install mas'."
+          when: mas_check.rc != 0
 
-    - name: Installierte App-Store-Programme abrufen
-      ansible.builtin.command: mas list
-      register: mas_installed_apps
-      changed_when: false
+        - name: Installierte App-Store-Programme abrufen
+          ansible.builtin.command: mas list
+          register: mas_installed_apps
+          changed_when: false
 
-    - name: Liste der installierten App-Store-Software ausgeben
-      ansible.builtin.debug:
-        var: mas_installed_apps.stdout_lines
+        - name: Liste der installierten App-Store-Software ausgeben
+          ansible.builtin.debug:
+            var: mas_installed_apps.stdout_lines
 
-    - name: Verfügbare Updates für App-Store-Programme prüfen
-      ansible.builtin.command: mas outdated
-      register: mas_outdated_apps
-      changed_when: false
+        - name: Verfügbare Updates für App-Store-Programme prüfen
+          ansible.builtin.command: mas outdated
+          register: mas_outdated_apps
+          changed_when: false
 
-    - name: App-Store-Programme mit ausstehendem Update anzeigen
-      ansible.builtin.debug:
-        msg: >-
-          {{ mas_outdated_apps.stdout_lines
-             if (mas_outdated_apps.stdout_lines | length > 0)
-             else ['Alle App-Store-Programme sind bereits auf dem neuesten Stand.'] }}
+        - name: App-Store-Programme mit ausstehendem Update anzeigen
+          ansible.builtin.debug:
+            msg: >-
+              {{ mas_outdated_apps.stdout_lines
+                 if (mas_outdated_apps.stdout_lines | length > 0)
+                 else ['Alle App-Store-Programme sind bereits auf dem neuesten Stand.'] }}
 
-    - name: Ausstehende App-Store-Updates installieren
-      ansible.builtin.command: mas upgrade
-      register: mas_upgrade_result
-      when: mas_outdated_apps.stdout_lines | length > 0
-      changed_when: mas_upgrade_result.stdout != ""
+        - name: Ausstehende App-Store-Updates installieren
+          ansible.builtin.command: mas upgrade
+          register: mas_upgrade_result
+          when: mas_outdated_apps.stdout_lines | length > 0
+          changed_when: mas_upgrade_result.stdout != ""
 
-    - name: Ergebnis der durchgeführten App-Store-Updates ausgeben
-      ansible.builtin.debug:
-        var: mas_upgrade_result.stdout_lines
-      when: mas_outdated_apps.stdout_lines | length > 0
+        - name: Ergebnis der durchgeführten App-Store-Updates ausgeben
+          ansible.builtin.debug:
+            var: mas_upgrade_result.stdout_lines
+          when: mas_outdated_apps.stdout_lines | length > 0
 
     # --- 3. MICROSOFT AUTOUPDATE (msupdate) ---
-    - name: Prüfen, ob Microsoft AutoUpdate (msupdate) vorhanden ist
-      ansible.builtin.stat:
-        path: "{{ msupdate_bin }}"
-      register: msupdate_stat
+    - name: Microsoft-AutoUpdate-Wartung und Updates durchführen
+      tags:
+        - microsoft
+      block:
+        - name: Prüfen, ob Microsoft AutoUpdate (msupdate) vorhanden ist
+          ansible.builtin.stat:
+            path: "{{ msupdate_bin }}"
+          register: msupdate_stat
 
-    - name: Verfügbare Microsoft-Updates prüfen
-      ansible.builtin.command:
-        argv:
-          - "{{ msupdate_bin }}"
-          - "--list"
-      register: msupdate_list
-      when: msupdate_stat.stat.exists
-      changed_when: false
+        - name: Verfügbare Microsoft-Updates prüfen
+          ansible.builtin.command:
+            argv:
+              - "{{ msupdate_bin }}"
+              - "--list"
+          register: msupdate_list
+          when: msupdate_stat.stat.exists
+          changed_when: false
 
-    - name: Ausstehende Microsoft-Updates anzeigen
-      ansible.builtin.debug:
-        var: msupdate_list.stdout_lines
-      when: msupdate_stat.stat.exists
+        - name: Ausstehende Microsoft-Updates anzeigen
+          ansible.builtin.debug:
+            var: msupdate_list.stdout_lines
+          when: msupdate_stat.stat.exists
 
-    - name: Ausstehende Microsoft-Updates installieren
-      ansible.builtin.command:
-        argv:
-          - "{{ msupdate_bin }}"
-          - "--install"
-      register: msupdate_install
-      when:
-        - msupdate_stat.stat.exists
-        - "'No updates available' not in msupdate_list.stdout"
-      changed_when: "'No updates available' not in msupdate_install.stdout"
+        - name: Ausstehende Microsoft-Updates installieren
+          ansible.builtin.command:
+            argv:
+              - "{{ msupdate_bin }}"
+              - "--install"
+          register: msupdate_install
+          when:
+            - msupdate_stat.stat.exists
+            - "'No updates available' not in msupdate_list.stdout"
+          changed_when: "'No updates available' not in msupdate_install.stdout"
 
-    - name: Ergebnis der durchgeführten Microsoft-Updates ausgeben
-      ansible.builtin.debug:
-        var: msupdate_install.stdout_lines
-      when:
-        - msupdate_stat.stat.exists
-        - "'No updates available' not in msupdate_list.stdout"
+        - name: Ergebnis der durchgeführten Microsoft-Updates ausgeben
+          ansible.builtin.debug:
+            var: msupdate_install.stdout_lines
+          when:
+            - msupdate_stat.stat.exists
+            - "'No updates available' not in msupdate_list.stdout"
 
     # --- 4. MACOS SYSTEMUPDATES (softwareupdate) ---
-    - name: Verfügbare macOS-Systemupdates prüfen
-      ansible.builtin.command: softwareupdate --list
-      register: macos_updates_list
-      changed_when: false
+    - name: MacOS-Systemupdates prüfen und installieren
+      tags:
+        - osx
+      block:
+        - name: Verfügbare macOS-Systemupdates prüfen
+          ansible.builtin.command: softwareupdate --list
+          register: macos_updates_list
+          changed_when: false
 
-    - name: Verfügbare macOS-Systemupdates anzeigen
-      ansible.builtin.debug:
-        msg: >-
-          {{ macos_updates_list.stdout_lines
-             if ('No new software available.' not in macos_updates_list.stderr
-                 and 'No new software available.' not in macos_updates_list.stdout)
-             else ['macOS ist bereits auf dem neuesten Stand.'] }}
+        - name: Verfügbare macOS-Systemupdates anzeigen
+          ansible.builtin.debug:
+            msg: >-
+              {{ macos_updates_list.stdout_lines
+                 if ('No new software available.' not in macos_updates_list.stderr
+                     and 'No new software available.' not in macos_updates_list.stdout)
+                 else ['macOS ist bereits auf dem neuesten Stand.'] }}
 
-    - name: Ausstehende macOS-Systemupdates installieren
-      ansible.builtin.command: sudo -A softwareupdate --install --all
-      register: macos_updates_install
-      when:
-        - "'No new software available.' not in macos_updates_list.stderr"
-        - "'No new software available.' not in macos_updates_list.stdout"
-      changed_when: "'Installed' in macos_updates_install.stdout"
+        - name: Ausstehende macOS-Systemupdates installieren
+          ansible.builtin.command: sudo -A softwareupdate --install --all
+          register: macos_updates_install
+          when:
+            - "'No new software available.' not in macos_updates_list.stderr"
+            - "'No new software available.' not in macos_updates_list.stdout"
+          changed_when: "'Installed' in macos_updates_install.stdout"
 
-    - name: Ergebnis der durchgeführten macOS-Updates ausgeben
-      ansible.builtin.debug:
-        var: macos_updates_install.stdout_lines
-      when:
-        - "'No new software available.' not in macos_updates_list.stderr"
-        - "'No new software available.' not in macos_updates_list.stdout"
+        - name: Ergebnis der durchgeführten macOS-Updates ausgeben
+          ansible.builtin.debug:
+            var: macos_updates_install.stdout_lines
+          when:
+            - "'No new software available.' not in macos_updates_list.stderr"
+            - "'No new software available.' not in macos_updates_list.stdout"
