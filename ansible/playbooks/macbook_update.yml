@@ -6,63 +6,79 @@
   become: false
 
   vars:
-    homebrew_prefix: "/Users/mg0050/homebrew"
-    homebrew_appdir: "/Users/mg0050/Applications"
     default_path: "/usr/bin:/bin:/usr/sbin:/sbin"
     askpass_script: "/Users/mg0050/.local/bin/macos-askpass.sh"
     msupdate_bin: >-
       /Library/Application Support/Microsoft/MAU2.0/Microsoft AutoUpdate.app/Contents/MacOS/msupdate
 
   environment:
-    PATH: >-
-      {{ homebrew_prefix }}/bin:{{ homebrew_prefix }}/sbin:/opt/homebrew/bin:/usr/local/bin:{{ ansible_facts["env"]["PATH"] | default(default_path) }}
-    HOMEBREW_CASK_OPTS: "--appdir={{ homebrew_appdir }}"
     SUDO_ASKPASS: "{{ askpass_script }}"
 
   tasks:
-    # --- 1. HOMEBREW ---
-    - name: Homebrew-Wartung und Updates durchführen
+    # --- 1A. HOMEBREW FÜR L00026C ---
+    - name: Homebrew-Wartung und Updates für L00026C durchführen
       tags:
         - homebrew
+      when: ansible_facts['hostname'] == 'L00026C'
+      vars:
+        homebrew_prefix: "/Users/mg0050/homebrew"
+        homebrew_appdir: "/Users/mg0050/Applications"
+      environment:
+        PATH: >-
+          {{ homebrew_prefix }}/bin:{{ homebrew_prefix }}/sbin:/opt/homebrew/bin:/usr/local/bin:{{ ansible_facts["env"]["PATH"] | default(default_path) }}
+        HOMEBREW_CASK_OPTS: "--appdir={{ homebrew_appdir }}"
       block:
-        - name: Prüfen, ob brew installiert ist
+        - name: Prüfen, ob brew installiert ist (L00026C)
           ansible.builtin.command: which brew
-          register: brew_check
+          register: brew_check_26c
           changed_when: false
           failed_when: false
 
-        - name: Fehlermeldung ausgeben, falls brew nicht gefunden wurde
+        - name: Fehlermeldung ausgeben, falls brew nicht gefunden wurde (L00026C)
           ansible.builtin.fail:
             msg: "Homebrew wurde unter '{{ homebrew_prefix }}' nicht gefunden."
-          when: brew_check.rc != 0
+          when: brew_check_26c.rc != 0
 
-        - name: Homebrew-Paketlisten aktualisieren
+        - name: Homebrew-Paketlisten aktualisieren (L00026C)
           ansible.builtin.command: brew update
-          register: brew_update_result
-          changed_when: "'Already up-to-date.' not in brew_update_result.stdout"
+          register: brew_update_result_26c
+          changed_when: "'Already up-to-date.' not in brew_update_result_26c.stdout"
 
-        - name: Veraltete Homebrew-Pakete und Casks prüfen
+        - name: Veraltete Homebrew-Pakete und Casks prüfen (L00026C)
           ansible.builtin.command: brew outdated --verbose
-          register: brew_outdated_packages
+          register: brew_outdated_packages_26c
+
+    # --- 1B. HOMEBREW FÜR L00026E ---
+    - name: Homebrew-Wartung und Updates für L00026E durchführen
+      tags:
+        - homebrew
+      when: ansible_facts['hostname'] == 'L00026E'
+      vars:
+        homebrew_prefix: "/Users/user/.local"
+      environment:
+        PATH: >-
+          {{ homebrew_prefix }}/bin:{{ homebrew_prefix }}/sbin:/opt/homebrew/bin:/usr/local/bin:{{ ansible_facts["env"]["PATH"] | default(default_path) }}
+        HOMEBREW_CASKROOM: "{{ homebrew_prefix }}/Caskroom"
+      block:
+        - name: Prüfen, ob brew installiert ist (L00026E)
+          ansible.builtin.command: which brew
+          register: brew_check_26e
           changed_when: false
+          failed_when: false
 
-        - name: Veraltete Homebrew-Pakete anzeigen
-          ansible.builtin.debug:
-            msg: >-
-              {{ brew_outdated_packages.stdout_lines
-              if (brew_outdated_packages.stdout_lines | length > 0)
-              else ['Alle Homebrew-Pakete sind bereits auf dem neuesten Stand.'] }}
+        - name: Fehlermeldung ausgeben, falls brew nicht gefunden wurde (L00026E)
+          ansible.builtin.fail:
+            msg: "Homebrew wurde unter '{{ homebrew_prefix }}/bin/brew' nicht gefunden."
+          when: brew_check_26e.rc != 0
 
-        - name: Ausstehende Homebrew-Updates installieren
-          ansible.builtin.command: brew upgrade
-          register: brew_upgrade_result
-          when: brew_outdated_packages.stdout_lines | length > 0
-          changed_when: brew_upgrade_result.stdout != ""
+        - name: Homebrew-Paketlisten aktualisieren (L00026E)
+          ansible.builtin.command: brew update
+          register: brew_update_result_26e
+          changed_when: "'Already up-to-date.' not in brew_update_result_26e.stdout"
 
-        - name: Ergebnis der durchgeführten Homebrew-Updates ausgeben
-          ansible.builtin.debug:
-            var: brew_upgrade_result.stdout_lines
-          when: brew_outdated_packages.stdout_lines | length > 0
+        - name: Veraltete Homebrew-Pakete und Casks prüfen (L00026E)
+          ansible.builtin.command: brew outdated --verbose
+          register: brew_outdated_packages_26e
 
     # --- 2. MAC APP STORE (mas) ---
     - name: Mac-App-Store-Wartung und Updates durchführen
