@@ -117,11 +117,20 @@
                  if (mas_outdated_apps.stdout_lines | length > 0)
                  else ['Alle App-Store-Programme sind bereits auf dem neuesten Stand.'] }}
 
+<<<<<<< HEAD
         - name: Ausstehende App-Store-Updates installieren
           ansible.builtin.command: mas upgrade
           register: mas_upgrade_result
           when: mas_outdated_apps.stdout_lines | length > 0
           changed_when: mas_upgrade_result.stdout != ""
+=======
+    - name: Ausstehende App-Store-Updates installieren
+      ansible.builtin.command: mas upgrade
+      become: true
+      register: mas_upgrade_result
+      when: mas_outdated_apps.stdout_lines | length > 0
+      changed_when: mas_upgrade_result.stdout != ""
+>>>>>>> d152f36 (updates)
 
         - name: Ergebnis der durchgeführten App-Store-Updates ausgeben
           ansible.builtin.debug:
