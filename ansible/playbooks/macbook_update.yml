@@ -1,213 +1,148 @@
 ---
-- name: Homebrew, Mac App Store, Microsoft und macOS Software aktualisieren
+- name: macOS-Wartung und Updates durchführen
   hosts: localhost
   connection: local
   gather_facts: true
-  become: false
-
-  vars:
-    default_path: "/usr/bin:/bin:/usr/sbin:/sbin"
-    askpass_script: "/Users/mg0050/.local/bin/macos-askpass.sh"
-    msupdate_bin: >-
-      /Library/Application Support/Microsoft/MAU2.0/Microsoft AutoUpdate.app/Contents/MacOS/msupdate
-
-  environment:
-    SUDO_ASKPASS: "{{ askpass_script }}"
 
   tasks:
-    # --- 1A. HOMEBREW FÜR L00026C ---
-    - name: Homebrew-Wartung und Updates für L00026C durchführen
+    - name: Homebrew Update und Upgrade ausführen
       tags:
-        - homebrew
-      when: ansible_facts['hostname'] == 'L00026C'
+        - brew
+      when: ansible_facts['hostname'] in ["L00026E", "HIER-ZWEITEN-HOSTNAME-EINTRAGEN"]
       vars:
-        homebrew_prefix: "/Users/mg0050/homebrew"
-        homebrew_appdir: "/Users/mg0050/Applications"
+        brew_prefix: "{{ ansible_facts['user_dir'] }}/b"
+        brew_bin: "{{ brew_prefix }}/bin/brew"
+        askpass_script: "{{ ansible_facts['user_dir'] }}/.local/bin/macos-askpass.sh"
       environment:
-        PATH: >-
-          {{ homebrew_prefix }}/bin:{{ homebrew_prefix }}/sbin:/opt/homebrew/bin:/usr/local/bin:{{ ansible_facts["env"]["PATH"] | default(default_path) }}
-        HOMEBREW_CASK_OPTS: "--appdir={{ homebrew_appdir }}"
+        PATH: "{{ brew_prefix }}/bin:{{ brew_prefix }}/sbin:{{ ansible_facts['env']['PATH'] }}"
+        HOMEBREW_CASK_OPTS: "--appdir=~/Applications"
+        HOMEBREW_NO_BUILD_FROM_SOURCE: "1"
+        HOMEBREW_NO_ENV_HINTS: "1"
+        SUDO_ASKPASS: "{{ askpass_script }}"
       block:
-        - name: Prüfen, ob brew installiert ist (L00026C)
-          ansible.builtin.command: which brew
-          register: brew_check_26c
-          changed_when: false
-          failed_when: false
+        - name: Zielverzeichnis für das Askpass-Skript sicherstellen
+          ansible.builtin.file:
+            path: "{{ askpass_script | dirname }}"
+            state: directory
+            mode: "0755"
 
-        - name: Fehlermeldung ausgeben, falls brew nicht gefunden wurde (L00026C)
-          ansible.builtin.fail:
-            msg: "Homebrew wurde unter '{{ homebrew_prefix }}' nicht gefunden."
-          when: brew_check_26c.rc != 0
+        - name: Sicherstellen, dass das Askpass-Skript vorhanden und ausführbar ist
+          ansible.builtin.copy:
+            src: "{{ playbook_dir }}/macos-askpass.sh"
+            dest: "{{ askpass_script }}"
+            mode: "0755"
 
-        - name: Homebrew-Paketlisten aktualisieren (L00026C)
-          ansible.builtin.command: brew update
-          register: brew_update_result_26c
-          changed_when: "'Already up-to-date.' not in brew_update_result_26c.stdout"
+        - name: Prüfen, ob Homebrew vorhanden ist
+          ansible.builtin.stat:
+            path: "{{ brew_bin }}"
+          register: brew_stat
 
-        - name: Veraltete Homebrew-Pakete und Casks prüfen (L00026C)
-          ansible.builtin.command: brew outdated --verbose
-          register: brew_outdated_packages_26c
+        - name: Homebrew-Paketlisten aktualisieren
+          ansible.builtin.command:
+            argv:
+              - "{{ brew_bin }}"
+              - "update"
+          register: brew_update_result
+          when: brew_stat.stat.exists
+          changed_when: "'Already up-to-date.' not in brew_update_result.stdout"
 
-    # --- 1B. HOMEBREW FÜR L00026E ---
-    - name: Homebrew-Wartung und Updates für L00026E durchführen
-      tags:
-        - homebrew
-      when: ansible_facts['hostname'] == 'L00026E'
-      vars:
-        homebrew_prefix: "/Users/user/.local"
-      environment:
-        PATH: >-
-          {{ homebrew_prefix }}/bin:{{ homebrew_prefix }}/sbin:/opt/homebrew/bin:/usr/local/bin:{{ ansible_facts["env"]["PATH"] | default(default_path) }}
-        HOMEBREW_CASKROOM: "{{ homebrew_prefix }}/Caskroom"
-      block:
-        - name: Prüfen, ob brew installiert ist (L00026E)
-          ansible.builtin.command: which brew
-          register: brew_check_26e
-          changed_when: false
-          failed_when: false
-
-        - name: Fehlermeldung ausgeben, falls brew nicht gefunden wurde (L00026E)
-          ansible.builtin.fail:
-            msg: "Homebrew wurde unter '{{ homebrew_prefix }}/bin/brew' nicht gefunden."
-          when: brew_check_26e.rc != 0
-
-        - name: Homebrew-Paketlisten aktualisieren (L00026E)
-          ansible.builtin.command: brew update
-          register: brew_update_result_26e
-          changed_when: "'Already up-to-date.' not in brew_update_result_26e.stdout"
-
-        - name: Veraltete Homebrew-Pakete und Casks prüfen (L00026E)
-          ansible.builtin.command: brew outdated --verbose
-          register: brew_outdated_packages_26e
-
-    # --- 2. MAC APP STORE (mas) ---
-    - name: Mac-App-Store-Wartung und Updates durchführen
-      tags:
-        - apps
-      block:
-        - name: Prüfen, ob mas installiert ist
-          ansible.builtin.command: which mas
-          register: mas_check
-          changed_when: false
-          failed_when: false
-
-        - name: Fehlermeldung ausgeben, falls mas nicht gefunden wurde
-          ansible.builtin.fail:
-            msg: "Das Tool 'mas' wurde nicht gefunden. Bitte installiere es zuerst mit '{{ homebrew_prefix }}/bin/brew install mas'."
-          when: mas_check.rc != 0
-
-        - name: Installierte App-Store-Programme abrufen
-          ansible.builtin.command: mas list
-          register: mas_installed_apps
+        - name: Veraltete Homebrew-Pakete und Casks prüfen
+          ansible.builtin.command:
+            argv:
+              - "{{ brew_bin }}"
+              - "outdated"
+              - "--verbose"
+          register: brew_outdated_packages
+          when: brew_stat.stat.exists
           changed_when: false
 
-        - name: Liste der installierten App-Store-Software ausgeben
+        - name: Ausstehende Homebrew-Updates anzeigen
           ansible.builtin.debug:
-            var: mas_installed_apps.stdout_lines
+            var: brew_outdated_packages.stdout_lines
+          when:
+            - brew_stat.stat.exists
+            - brew_outdated_packages.stdout != ""
 
-        - name: Verfügbare Updates für App-Store-Programme prüfen
-          ansible.builtin.command: mas outdated
+        - name: Homebrew-Formulae (CLI-Tools) aktualisieren
+          ansible.builtin.command:
+            argv:
+              - "{{ brew_bin }}"
+              - "upgrade"
+              - "--formula"
+          register: brew_upgrade_formula
+          when:
+            - brew_stat.stat.exists
+            - brew_outdated_packages.stdout != ""
+          changed_when: true
+
+        - name: Homebrew-Casks (GUI-Apps) aktualisieren
+          ansible.builtin.command:
+            argv:
+              - "{{ brew_bin }}"
+              - "upgrade"
+              - "--cask"
+          register: brew_upgrade_cask
+          when:
+            - brew_stat.stat.exists
+            - brew_outdated_packages.stdout != ""
+          changed_when: true
+          failed_when: false
+
+        - name: Ergebnis der aktualisierten Pakete ausgeben
+          ansible.builtin.debug:
+            msg:
+              - "Formulae: {{ brew_upgrade_formula.stdout_lines | default([]) }}"
+              - "Casks: {{ brew_upgrade_cask.stdout_lines | default([]) }}"
+          when:
+            - brew_stat.stat.exists
+            - brew_outdated_packages.stdout != ""
+
+    - name: Mac App Store (mas) Updates ausführen
+      tags:
+        - mas
+      when: ansible_facts['hostname'] in ["L00026E", "HIER-ZWEITEN-HOSTNAME-EINTRAGEN"]
+      vars:
+        brew_prefix: "{{ ansible_facts['user_dir'] }}/b"
+        mas_bin: "{{ brew_prefix }}/bin/mas"
+      environment:
+        PATH: "{{ brew_prefix }}/bin:{{ brew_prefix }}/sbin:{{ ansible_facts['env']['PATH'] }}"
+      block:
+        - name: Prüfen, ob mas vorhanden ist
+          ansible.builtin.stat:
+            path: "{{ mas_bin }}"
+          register: mas_stat
+
+        - name: Veraltete Mac App Store Apps prüfen
+          ansible.builtin.command:
+            argv:
+              - "{{ mas_bin }}"
+              - "outdated"
           register: mas_outdated_apps
+          when: mas_stat.stat.exists
           changed_when: false
 
-        - name: App-Store-Programme mit ausstehendem Update anzeigen
+        - name: Ausstehende Mac App Store Updates anzeigen
           ansible.builtin.debug:
-            msg: >-
-              {{ mas_outdated_apps.stdout_lines
-                 if (mas_outdated_apps.stdout_lines | length > 0)
-                 else ['Alle App-Store-Programme sind bereits auf dem neuesten Stand.'] }}
+            var: mas_outdated_apps.stdout_lines
+          when:
+            - mas_stat.stat.exists
+            - mas_outdated_apps.stdout != ""
 
-<<<<<<< HEAD
-        - name: Ausstehende App-Store-Updates installieren
-          ansible.builtin.command: mas upgrade
+        - name: Ausstehende Mac App Store Apps aktualisieren
+          ansible.builtin.command:
+            argv:
+              - "{{ mas_bin }}"
+              - "upgrade"
           register: mas_upgrade_result
-          when: mas_outdated_apps.stdout_lines | length > 0
-          changed_when: mas_upgrade_result.stdout != ""
-=======
-    - name: Ausstehende App-Store-Updates installieren
-      ansible.builtin.command: mas upgrade
-      become: true
-      register: mas_upgrade_result
-      when: mas_outdated_apps.stdout_lines | length > 0
-      changed_when: mas_upgrade_result.stdout != ""
->>>>>>> d152f36 (updates)
+          when:
+            - mas_stat.stat.exists
+            - mas_outdated_apps.stdout != ""
+          changed_when: true
+          failed_when: false
 
-        - name: Ergebnis der durchgeführten App-Store-Updates ausgeben
+        - name: Ergebnis der aktualisierten App Store Apps ausgeben
           ansible.builtin.debug:
             var: mas_upgrade_result.stdout_lines
-          when: mas_outdated_apps.stdout_lines | length > 0
-
-    # --- 3. MICROSOFT AUTOUPDATE (msupdate) ---
-    - name: Microsoft-AutoUpdate-Wartung und Updates durchführen
-      tags:
-        - microsoft
-      block:
-        - name: Prüfen, ob Microsoft AutoUpdate (msupdate) vorhanden ist
-          ansible.builtin.stat:
-            path: "{{ msupdate_bin }}"
-          register: msupdate_stat
-
-        - name: Verfügbare Microsoft-Updates prüfen
-          ansible.builtin.command:
-            argv:
-              - "{{ msupdate_bin }}"
-              - "--list"
-          register: msupdate_list
-          when: msupdate_stat.stat.exists
-          changed_when: false
-
-        - name: Ausstehende Microsoft-Updates anzeigen
-          ansible.builtin.debug:
-            var: msupdate_list.stdout_lines
-          when: msupdate_stat.stat.exists
-
-        - name: Ausstehende Microsoft-Updates installieren
-          ansible.builtin.command:
-            argv:
-              - "{{ msupdate_bin }}"
-              - "--install"
-          register: msupdate_install
           when:
-            - msupdate_stat.stat.exists
-            - "'No updates available' not in msupdate_list.stdout"
-          changed_when: "'No updates available' not in msupdate_install.stdout"
-
-        - name: Ergebnis der durchgeführten Microsoft-Updates ausgeben
-          ansible.builtin.debug:
-            var: msupdate_install.stdout_lines
-          when:
-            - msupdate_stat.stat.exists
-            - "'No updates available' not in msupdate_list.stdout"
-
-    # --- 4. MACOS SYSTEMUPDATES (softwareupdate) ---
-    - name: MacOS-Systemupdates prüfen und installieren
-      tags:
-        - osx
-      block:
-        - name: Verfügbare macOS-Systemupdates prüfen
-          ansible.builtin.command: softwareupdate --list
-          register: macos_updates_list
-          changed_when: false
-
-        - name: Verfügbare macOS-Systemupdates anzeigen
-          ansible.builtin.debug:
-            msg: >-
-              {{ macos_updates_list.stdout_lines
-                 if ('No new software available.' not in macos_updates_list.stderr
-                     and 'No new software available.' not in macos_updates_list.stdout)
-                 else ['macOS ist bereits auf dem neuesten Stand.'] }}
-
-        - name: Ausstehende macOS-Systemupdates installieren
-          ansible.builtin.command: sudo -A softwareupdate --install --all
-          register: macos_updates_install
-          when:
-            - "'No new software available.' not in macos_updates_list.stderr"
-            - "'No new software available.' not in macos_updates_list.stdout"
-          changed_when: "'Installed' in macos_updates_install.stdout"
-
-        - name: Ergebnis der durchgeführten macOS-Updates ausgeben
-          ansible.builtin.debug:
-            var: macos_updates_install.stdout_lines
-          when:
-            - "'No new software available.' not in macos_updates_list.stderr"
-            - "'No new software available.' not in macos_updates_list.stdout"
+            - mas_stat.stat.exists
+            - mas_outdated_apps.stdout != ""
