@@ -3,6 +3,12 @@ services:
     image: amir20/dozzle:v11.5.0
     container_name: dozzle
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "/dozzle", "healthcheck"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - dozzle_data:/data
