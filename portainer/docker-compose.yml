@@ -4,7 +4,7 @@ volumes:
 
 services:
   portainer:
-    image: portainer/portainer-ce:2.45.3
+    image: portainer/portainer-ee:2.45.4
     container_name: portainer
     volumes:
       - data:/data
