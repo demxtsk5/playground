@@ -58,9 +58,15 @@ beszel.mg0050.duckdns.org {
 }
 
 portainer.mg0050.duckdns.org {
+	@blocked {
+		not path /api/webhooks/* /api/stacks/webhooks/*
+		not remote_ip 192.168.178.0/24 127.0.0.1
+	}
+	respond @blocked "Access Denied" 403
+
 	reverse_proxy https://portainer:9443 {
-           transport http {
-               tls_insecure_skip_verify
-           }
-        }
+		transport http {
+			tls_insecure_skip_verify
+		}
+	}
 }
