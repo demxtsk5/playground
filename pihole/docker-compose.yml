@@ -9,11 +9,12 @@ services:
     environment:
       TZ: "Europe/Berlin"
       FTLCONF_dns_listeningMode: "all"
-      FTLCONF_webserver_api_password: "WpYGTQ_2V*ostzPx"
+      FTLCONF_webserver_api_password: "${WEBPASSWORD}"
       FTLCONF_dns_upstreams: 8.8.8.8;8.8.4.4
+      FTLCONF_dns_hosts: "192.168.178.140 portainer.lan;192.168.178.140 pihole.lan;192.168.178.140 searx.lan;192.168.178.140 dozzle.lan;192.168.178.140 kuma.lan;192.168.178.140 beszel.lan"
     volumes:
-      - "./etc-pihole:/etc/pihole"
-      - "./etc-dnsmasq.d:/etc/dnsmasq.d"
+      - "/home/mg0050/git/playground/pihole/etc-pihole:/etc/pihole"
+      - "/home/mg0050/git/playground/pihole/etc-dnsmasq.d:/etc/dnsmasq.d"
     restart: unless-stopped
     networks:
       - caddy_net
