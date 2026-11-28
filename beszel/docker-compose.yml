@@ -1,6 +1,6 @@
 services:
   beszel:
-    image: henrygd/beszel:latest
+    image: henrygd/beszel:0.21.2
     container_name: beszel
     restart: unless-stopped
     ports:
@@ -25,7 +25,7 @@ services:
       - ./beszel_agent_data:/var/lib/beszel-agent
     environment:
       LISTEN: 45876
-      KEY: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPKZ2+xE5BYfBYHwM04mxZHre/Cd2VNVs1Lj4CAvmTsC"
+      KEY: "${KEY}"
       TOKEN: "266-d630ab39dbc-36cb-99ec6a132"
       HUB_URL: "http://127.0.0.1:8090"
 
